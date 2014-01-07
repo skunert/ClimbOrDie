@@ -15,17 +15,17 @@ public class Renderer {
 	
 	public void drawScene(Scene scene, Rectangle area) {
 		drawBackground(scene, area);
-		drawHandle(scene);
-		drawSkeleton(scene);		
-		drawCrocodile(scene);
-		drawWater(scene);
+		drawHandles(scene, area);
+		drawSkeleton(scene, area);		
+		drawCrocodile(scene, area);
+		drawWater(scene, area);
 	}
 	
-	private void drawHandle(Scene scene) {
+	private void drawHandles(Scene scene, Rectangle area) {
 		
 	}
 	
-	private void drawSkeleton(Scene scene) {
+	private void drawSkeleton(Scene scene, Rectangle area) {
 		
 	}
 	
@@ -33,11 +33,11 @@ public class Renderer {
 		
 	}
 	
-	private void drawWater(Scene scene) {
+	private void drawWater(Scene scene, Rectangle area) {
 		
 	}
 	
-	private void drawCrocodile(Scene scene) {
+	private void drawCrocodile(Scene scene, Rectangle area) {
 		
 	}
 }
