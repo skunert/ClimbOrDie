@@ -1,3 +1,4 @@
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -122,9 +123,26 @@ public class SceneImpl extends Scene {
 
 	@Override
 	public Skeleton initSkeleton() {
+        // TODO Auto-generated method stub
+        skeleton = new Skeleton();
+
+        // dummy skeleton init
+        skeleton.setCenter(new Point(400, 300));
+        skeleton.setHead(new Point(0, -50));
+        skeleton.setHip(new Point(0, 50));
+        skeleton.setLeftShoulder(new Point(-20, -30));
+        skeleton.setRightShoulder(new Point(20, -30));
+        skeleton.setLeftElbow(new Point(-50, -20));
+        skeleton.setRightElbow(new Point(50, -20));
+        skeleton.setLeftHand(new Point(-60, -50));
+        skeleton.setRightHand(new Point(60, -50));
+        skeleton.setLeftKnee(new Point(-30, 70));
+        skeleton.setRightKnee(new Point(30, 70));
+        skeleton.setLeftFoot(new Point(-40, 100));
+        skeleton.setRightFoot(new Point(40, 100));
+        skeleton.setRightHandGrab(true);
+
 		return skeleton;
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override

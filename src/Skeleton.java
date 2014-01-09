@@ -2,30 +2,35 @@ import java.awt.Point;
 
 
 public class Skeleton {
-	private Point leftHandPos;
-	private Point rightHandPos;
-	private Point leftEllbow;
-	private Point rightEllbow;
+    private Point center;
+	private Point leftHand;
+	private Point rightHand;
+	private Point leftElbow;
+	private Point rightElbow;
 	private Point leftShoulder;
 	private Point rightShoulder;
-	private Point Hip;
-	private Point Head;
+	private Point hip;
+	private Point head;
 	private Point leftKnee;
 	private Point rightKnee;
 	private Point leftFoot;
 	private Point rightFoot;
-	
-	public Point getLeftEllbow() {
-		return leftEllbow;
+    private boolean leftHandGrab;
+    private boolean rightHandGrab;
+
+    public Point getCenter() { return center; }
+    public void setCenter(Point center) { this.center = center; }
+	public Point getLeftElbow() {
+		return leftElbow;
 	}
-	public void setLeftEllbow(Point leftEllbow) {
-		this.leftEllbow = leftEllbow;
+	public void setLeftElbow(Point leftElbow) {
+		this.leftElbow = leftElbow;
 	}
-	public Point getRightEllbow() {
-		return rightEllbow;
+	public Point getRightElbow() {
+		return rightElbow;
 	}
-	public void setRightEllbow(Point rightEllbow) {
-		this.rightEllbow = rightEllbow;
+	public void setRightElbow(Point rightElbow) {
+		this.rightElbow = rightElbow;
 	}
 	public Point getLeftShoulder() {
 		return leftShoulder;
@@ -40,16 +45,16 @@ public class Skeleton {
 		this.rightShoulder = rightShoulder;
 	}
 	public Point getHip() {
-		return Hip;
+		return hip;
 	}
 	public void setHip(Point hip) {
-		Hip = hip;
+		this.hip = hip;
 	}
 	public Point getHead() {
-		return Head;
+		return head;
 	}
 	public void setHead(Point head) {
-		Head = head;
+		this.head = head;
 	}
 	public Point getLeftKnee() {
 		return leftKnee;
@@ -75,20 +80,17 @@ public class Skeleton {
 	public void setRightFoot(Point rightFoot) {
 		this.rightFoot = rightFoot;
 	}
-	private boolean leftHandGrab;
-	private boolean rightHandGrab;
-	
-	public Point getLeftHandPos() {
-		return leftHandPos;
+	public Point getLeftHand() {
+		return leftHand;
 	}
-	public void setLeftHandPos(Point leftHandPos) {
-		this.leftHandPos = leftHandPos;
+	public void setLeftHand(Point leftHand) {
+		this.leftHand = leftHand;
 	}
-	public Point getRightHandPos() {
-		return rightHandPos;
+	public Point getRightHand() {
+		return rightHand;
 	}
-	public void setRightHandPos(Point rightHandPos) {
-		this.rightHandPos = rightHandPos;
+	public void setRightHand(Point rightHand) {
+		this.rightHand = rightHand;
 	}
 	public boolean isLeftHandGrab() {
 		return leftHandGrab;
@@ -102,6 +104,4 @@ public class Skeleton {
 	public void setRightHandGrab(boolean rightHandGrab) {
 		this.rightHandGrab = rightHandGrab;
 	}
-	
-	
 }
