@@ -12,11 +12,11 @@ public class ClimbOrDie extends PApplet {
 	private Scene scene;
 	
 	public static void main(String args[]) {
-		PApplet.main(new String[] { "--present", "ClimbOrDie" });
+		PApplet.main(new String[] { /*"--present",*/ "ClimbOrDie" });
 	}
 	
 	public void setup() {
-		size(1280, 720);
+		size(720, 1000);
 		background(0);
 		scene = new SceneImpl(this);
 		Skeleton skeleton = scene.initSkeleton();
@@ -25,7 +25,7 @@ public class ClimbOrDie extends PApplet {
 	}
 
 	public void draw() {
-		sController.updateSkeleton(new Point(30, 50), new Point(30, 40), true, false);
+		sController.updateSkeleton(new Point(30, 50), new Point(30, 40), true, false, this);
 		renderer.drawScene(scene, new Rectangle(30,30,101, 250));
 	}
 }

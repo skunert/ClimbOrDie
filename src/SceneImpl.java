@@ -150,7 +150,7 @@ public class SceneImpl extends Scene {
 		ArrayList<Handle> handleList = new ArrayList<Handle>();
 		Random r = new Random();
 		for (int i = 0; i < 100; i++) {
-			Handle h = new Handle();
+			Handle h = new Handle(ImageData.getRandomHandleType());
 			h.setLocation(r.nextFloat()*1280, r.nextFloat()*720); //random locations
 			handleList.add(h);
 		}
