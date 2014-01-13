@@ -1,5 +1,8 @@
-import processing.core.*;
-import SimpleOpenNI.*;
+import java.awt.Point;
+
+import processing.core.PApplet;
+import processing.core.PVector;
+import SimpleOpenNI.SimpleOpenNI;
 
 public class KinectController {
 
@@ -8,7 +11,7 @@ public class KinectController {
 
 	private PVector rightHandPosition = new PVector();
 	private PVector leftHandPosition = new PVector();
-	
+
 	private PVector rightElbowPosition = new PVector();
 	private PVector leftElbowPosition = new PVector();
 	private PVector rightShoulderPosition = new PVector();
@@ -21,7 +24,7 @@ public class KinectController {
 
 	private int userId = 0;
 
-	private static int MAX_HAND_DEPTH_DOWN_DIFF = 10;
+	private static int MAX_HAND_DEPTH_DOWN_DIFF = 16;
 	private static int MAX_HAND_DEPTH_UP_DIFF = 8;
 	private static int ERROR_THRESHOLD = 10;
 	private static int GRAB_THRESHOLD = 60;
@@ -33,7 +36,7 @@ public class KinectController {
 
 	private boolean grabRightAverage[] = new boolean[1];
 	private int grabRightAverageIndex = 0;
-	private float lastRightHandSize;	
+	private float lastRightHandSize;
 
 	public KinectController(PApplet pApplet, boolean debug) {
 		this.context = new SimpleOpenNI(pApplet);
@@ -77,6 +80,7 @@ public class KinectController {
 		if (userList[0] != userId) {
 			userId = userList[0];
 			context.startTrackingSkeleton(userId);
+			PApplet.println("USER FOUND");
 		}
 
 		// skeleton not recognized yet
@@ -126,6 +130,15 @@ public class KinectController {
 
 		int index = Math.round(handPos.x) + Math.round(handPos.y)
 				* context.depthWidth();
+
+		// use last state
+		if (index > depthMap.length) {
+			if (rightHand) {
+				return grabRightAverage[grabRightAverage.length - 1];
+			} else {
+				return grabLeftAverage[grabLeftAverage.length - 1];
+			}
+		}
 
 		double handZ = depthMap[index].z;
 
@@ -240,28 +253,28 @@ public class KinectController {
 		return avg == 1;
 	}
 
-	public PVector getRightHandPosition() {
-		return rightHandPosition;
+	public Point getRightHandPosition() {
+		return new Point((int)rightHandPosition.x, (int) rightHandPosition.y);
 	}
 
-	public PVector getLeftHandPosition() {
-		return leftHandPosition;
+	public Point getLeftHandPosition() {
+		return new Point((int)leftHandPosition.x, (int) leftHandPosition.y);
 	}
 
-	public PVector getLeftElbowPosition() {
-		return leftElbowPosition;
+	public Point getLeftElbowPosition() {
+		return new Point((int)leftElbowPosition.x, (int) leftElbowPosition.y);
 	}
 
-	public PVector getLeftShoulderPosition() {
-		return leftShoulderPosition;
+	public Point getLeftShoulderPosition() {
+		return new Point((int)leftShoulderPosition.x, (int) leftShoulderPosition.y);
 	}
 
-	public PVector getRightElbowPosition() {
-		return rightElbowPosition;
+	public Point getRightElbowPosition() {
+		return new Point((int)rightElbowPosition.x, (int) rightElbowPosition.y);
 	}
 
-	public PVector getRightShoulderPosition() {
-		return rightShoulderPosition;
+	public Point getRightShoulderPosition() {
+		return new Point((int)rightShoulderPosition.x, (int) rightShoulderPosition.y);
 	}
 
 	public boolean isGrabRight() {
@@ -275,17 +288,17 @@ public class KinectController {
 	public void debug() {
 		pApplet.image(context.userImage(), 0, 0);
 		debugDrawSkeleton(userId);
-		debugDrawHand(leftHandPosition);
-		debugDrawHand(rightHandPosition);
+		// debugDrawHand(leftHandPosition);
+		// debugDrawHand(rightHandPosition);
 	}
 
-	private void debugDrawHand(PVector hand) {
-		if (hand.x != 0 && hand.y != 0) {
-			pApplet.fill(pApplet.color(255, 204, 0));
-			pApplet.ellipse(hand.x - 5, hand.y - 5, 10, 10);
-			pApplet.fill(pApplet.color(255, 255, 255));
-		}
-	}
+	// private void debugDrawHand(PVector hand) {
+	// if (hand.x != 0 && hand.y != 0) {
+	// pApplet.fill(pApplet.color(255, 204, 0));
+	// pApplet.ellipse(hand.x - 5, hand.y - 5, 10, 10);
+	// pApplet.fill(pApplet.color(255, 255, 255));
+	// }
+	// }
 
 	private void debugDrawSkeleton(int userId) {
 
