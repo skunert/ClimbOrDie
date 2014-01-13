@@ -17,12 +17,16 @@ public class Skeleton {
 	private Point rightFoot;
     private boolean leftHandGrab;
     private boolean rightHandGrab;
+    private boolean falling;
 
     public final static int shoulderDist = 40;
     public final static int lowerArmLength = 32;
     public final static int upperArmLength = 32;
     
-    public final static int minHandleGrabDist = 15;
+    public final static int minHandleGrabDist = 20;
+    
+    // TODO: some physics parameter?
+    public final static int skelWeight = 50;
 
     public Point getCenter() { return center; }
     public void setCenter(Point center) { this.center = center; }
@@ -109,5 +113,11 @@ public class Skeleton {
 	}
 	public void setRightHandGrab(boolean rightHandGrab) {
 		this.rightHandGrab = rightHandGrab;
+	}
+	public boolean isFalling() {
+		return falling;
+	}
+	public void setFalling(boolean falling) {
+		this.falling = falling;
 	}
 }

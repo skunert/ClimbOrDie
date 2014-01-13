@@ -12,6 +12,9 @@ public abstract class Scene {
 	protected float wallHeight;
 	protected PApplet parent;
 	
+	public int winGameHeight;
+    public int looseGameHeight; 
+	
 	public Scene(PApplet parent) {
 		this.parent = parent;
 	}
@@ -31,6 +34,16 @@ public abstract class Scene {
 	public float getWallHeight() {
 		return wallHeight;
 	}
+	
+	
+	public int getWinGameHeight() {
+		return winGameHeight;
+	}
+
+	public int getLooseGameHeight() {
+		return looseGameHeight;
+	}
+
 	/**
 	 * initializes the skeleton position
 	 */

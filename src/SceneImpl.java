@@ -12,6 +12,8 @@ public class SceneImpl extends Scene {
 	public SceneImpl(PApplet parent) {
 		super(parent);
 		this.handles = generateHandles();
+		this.winGameHeight = 200;
+		this.looseGameHeight = parent.getHeight();
 	}
 
 	@Override
@@ -141,6 +143,7 @@ public class SceneImpl extends Scene {
         skeleton.setLeftFoot(new Point(-40, 100));
         skeleton.setRightFoot(new Point(40, 100));
         skeleton.setRightHandGrab(true);
+        skeleton.setLeftHandGrab(true);
 
 		return skeleton;
 	}
