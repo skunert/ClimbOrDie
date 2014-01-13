@@ -8,6 +8,11 @@ public class KinectController {
 
 	private PVector rightHandPosition = new PVector();
 	private PVector leftHandPosition = new PVector();
+	
+	private PVector rightElbowPosition = new PVector();
+	private PVector leftElbowPosition = new PVector();
+	private PVector rightShoulderPosition = new PVector();
+	private PVector leftShoulderPosition = new PVector();
 
 	private boolean grabRight;
 	private boolean grabLeft;
@@ -28,11 +33,7 @@ public class KinectController {
 
 	private boolean grabRightAverage[] = new boolean[1];
 	private int grabRightAverageIndex = 0;
-	private float lastRightHandSize;
-	private PVector rightElbowPosition;
-	private PVector leftElbowPosition;
-	private PVector rightShoulderPosition;
-	private PVector leftShoulderPosition;
+	private float lastRightHandSize;	
 
 	public KinectController(PApplet pApplet, boolean debug) {
 		this.context = new SimpleOpenNI(pApplet);
