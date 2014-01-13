@@ -27,6 +27,24 @@ public class SkeletonController {
 		// TODO ICH (TIMO) MACH HIER BALD WEITER.
 		
 		
+		if (leftHandGrab) {
+			Handle leftHandHandle;
+			Handle rightHandHandle;
+			if ((leftHandHandle = getHandleUnderHand(leftHand)) != null) {
+				
+			}
+		}
+		if (rightHandGrab) {
+			Handle rightHandHandle = getHandleUnderHand(hand);
+		}
+	}
 
+	public Handle getHandleUnderHand(Point hand) {
+		for (Handle handle : scene.getHandles()) {
+			if (hand.distance(handle) <= Skeleton.minHandleGrabDist) {
+				return handle;
+			}
+		}
+		return null;
 	}
 }

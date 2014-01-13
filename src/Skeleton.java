@@ -21,6 +21,8 @@ public class Skeleton {
     public final static int shoulderDist = 40;
     public final static int lowerArmLength = 32;
     public final static int upperArmLength = 32;
+    
+    public final static int minHandleGrabDist = 15;
 
     public Point getCenter() { return center; }
     public void setCenter(Point center) { this.center = center; }
