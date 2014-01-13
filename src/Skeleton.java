@@ -18,11 +18,9 @@ public class Skeleton {
     private boolean leftHandGrab;
     private boolean rightHandGrab;
 
-    public final static int shoulderDist = 0;
-    public final static int lowerLeftArmLength = 0;
-    public final static int lowerRightArmLength = 0;
-    public final static int upperLeftArmLength = 0;
-    public final static int upperRightArmLength = 0;
+    public final static int shoulderDist = 40;
+    public final static int lowerArmLength = 32;
+    public final static int upperArmLength = 32;
 
     public Point getCenter() { return center; }
     public void setCenter(Point center) { this.center = center; }
