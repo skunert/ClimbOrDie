@@ -16,7 +16,7 @@ public class ClimbOrDie extends PApplet {
 	}
 
 	public void setup() {
-		size(720, 1000);
+		size(720, 700);
 		background(0);
 		scene = new SceneImpl(this);
 		Skeleton skeleton = scene.initSkeleton();
