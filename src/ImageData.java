@@ -70,7 +70,8 @@ public class ImageData {
 	public Point torsoPoint4;
 	public Point torsoPoint5;
 	
-	public PImage water;
+	public PImage waterRight;
+	public PImage waterLeft;
 	
 	public ImageData(PApplet pApplet) {
 		this.pApplet = pApplet;
@@ -93,7 +94,7 @@ public class ImageData {
 		this.armUpperRightPoint1 = new Point(44, 36);
 		this.armUpperRightPoint2 = new Point(46, 204);
 		
-		this.background = pApplet.loadImage("resources/images/background.png");
+		this.background = pApplet.loadImage("resources/images/background2.png");
 		
 		this.crocodile = pApplet.loadImage("resources/images/crocodile_106x27.png");
 		this.crocodilePoint1 = new Point(106, 27);
@@ -135,7 +136,8 @@ public class ImageData {
 		this.torsoPoint4 = new Point(80, 460);
 		this.torsoPoint5 = new Point(236, 460);
 		
-		this.water = pApplet.loadImage("resources/images/water.png");
+		this.waterRight = pApplet.loadImage("resources/images/waterRight.png");
+		this.waterLeft = pApplet.loadImage("resources/images/waterLeft.png");
 	}
 
 	public PImage getArmLowerClosedLeft() {
@@ -331,7 +333,11 @@ public class ImageData {
 		return torsoPoint5.x - getTorsoPointHip().x;
 	}
 	
-	public PImage getWater() {
-		return water;
+	public PImage getWaterRight() {
+		return waterRight;
+	}
+	
+	public PImage getWaterLeft() {
+		return waterLeft;
 	}
 }

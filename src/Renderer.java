@@ -14,6 +14,10 @@ public class Renderer {
 
 	private PApplet parent;
 	private ImageData imageData;
+	private int waterPos = 0;
+	private boolean waterDirection = false;
+	private int crocoPos = 0;
+	private boolean crocoDirection = false;
 
 	public Renderer(PApplet parent) {
 		this.parent = parent;
@@ -24,7 +28,7 @@ public class Renderer {
 		drawBackground(scene, area);
 		drawHandles(scene, area);
 		drawSkeleton(scene, area);		
-		drawCrocodile(scene, area);
+		// done in drawWater drawCrocodile(scene, area);
 		drawWater(scene, area);
 	}
 
@@ -35,7 +39,7 @@ public class Renderer {
 			this.parent.translate(h.x, h.y);
 			this.parent.scale(0.2f);
 			// TODO: Handles müssen mit dem hintergrund wandern!
-			if (h.y > 100) // <- remove!
+			if (h.y > 120) // <- remove!
 				this.parent.image(imageData.getHandleByIndex(h.type), 0, 0);
 			this.parent.popMatrix();
 		}
@@ -114,12 +118,27 @@ public class Renderer {
 		if(s == null){
 			return;
 		}
-		PImage waterImage = imageData.getWater();
+		PImage waterRightImage = imageData.getWaterRight();
+		PImage waterLeftImage = imageData.getWaterLeft();
 		parent.pushMatrix();
-		// TODO static position???
-		parent.translate(0, 3 * parent.height / 4);
-		parent.scale((float)parent.width / (float)waterImage.width);
-		parent.image(waterImage, 0, 0);
+		if (parent.frameCount % 120 == 0) {
+			waterDirection = false;
+		} else if (parent.frameCount % 60 == 0) {
+			waterDirection = true;
+		}
+		if (parent.frameCount % 2 == 0) {
+			if (waterDirection) {
+				waterPos++;
+			} else {
+				waterPos--;
+			}
+		}
+		parent.translate(waterPos - 20, parent.height - 150);
+		parent.scale(0.6f);
+		parent.image(waterLeftImage, 0, 0);
+		drawCrocodile(scene, area);
+		parent.translate(-waterPos - 20, 100);
+		parent.image(waterRightImage, 0, 0);
 		parent.popMatrix();
 	}
 
@@ -129,9 +148,22 @@ public class Renderer {
 			return;
 		}
 		parent.pushMatrix();
+		if (parent.frameCount % 36 == 0) {
+			crocoDirection = false;
+		} else if (parent.frameCount % 18 == 0) {
+			crocoDirection = true;
+		}
+		if (parent.frameCount % 2 == 0) {
+			if (crocoDirection) {
+				crocoPos++;
+			} else {
+				crocoPos--;
+			}
+		}
+		parent.resetMatrix();
 		// TODO static position???
-		parent.translate(2 * parent.width / 3, 2 * parent.height / 3);
-		parent.scale(0.2f);
+		parent.translate(parent.width - 300 + crocoPos,  parent.height - 220 + crocoPos);
+		parent.scale(0.3f);
 		parent.image(imageData.getCrocodile(), 0, 0);
 		parent.popMatrix();
 	}
