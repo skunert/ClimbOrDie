@@ -1,13 +1,5 @@
 import java.awt.*;
-import java.util.List;
-
-
-
-//import processing.core.PApplet;
-//import processing.core.PImage;
 import processing.core.*;
-
-import javax.lang.model.element.VariableElement;
 
 
 public class Renderer {

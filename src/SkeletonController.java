@@ -11,48 +11,67 @@ public class SkeletonController {
 
 	public void updateSkeleton(Point leftElbow, Point rightElbow,
 			Point leftShoulder, Point rightShoulder, Point leftHand,
-			Point rightHand, boolean leftHandGrab, boolean rightHandGrab) {		
-		
-		// Scale kinect sizes to image sizes
-//		double kSizeLeftLowerArm = leftHand.distance(leftShoulder);
-//		double kSizeLeftUpperArm = leftElbow.distance(leftShoulder);
-//		
-//		double kSizeRightLowerArm = rightHand.distance(rightShoulder);
-//		double kSizeRightUpperArm = leftElbow.distance(rightShoulder);
-		
+			Point rightHand, boolean leftHandGrab, boolean rightHandGrab) {
+
+		double kSizeLeftLowerArm = leftHand.distance(leftElbow);
+		double kSizeLeftUpperArm = leftElbow.distance(leftShoulder);
+		double kSizeRightLowerArm = rightHand.distance(rightElbow);
+		double kSizeRightUpperArm = rightElbow.distance(rightShoulder);
+
 		double iSizeLowerArm = Skeleton.lowerArmLength;
 		double iSizeUpperArm = Skeleton.upperArmLength;
-		double iSizeShoulderDist = Skeleton.shoulderDist;
-		
-		// TODO ICH (TIMO) MACH HIER BALD WEITER.
-		
 
-		/////////////////////////////////////////////////////////////////
+		double armLeftLowerArmScale = iSizeLowerArm / kSizeLeftLowerArm;
+		double armRightLowerArmScale = iSizeLowerArm / kSizeRightLowerArm;
+		double armLeftUpperArmScale = iSizeUpperArm / kSizeLeftUpperArm;
+		double armRightUpperArmScale = iSizeUpperArm / kSizeRightUpperArm;
+
+		skeleton.setLeftElbow(new Point(
+				(int) (skeleton.getLeftShoulder().x - ((leftShoulder.x - leftElbow.x) * armLeftUpperArmScale)),
+				(int) (skeleton.getLeftShoulder().y - ((leftShoulder.y - leftElbow.y) * armLeftUpperArmScale))));
+
+		skeleton.setLeftHand(new Point(
+				(int) (skeleton.getLeftElbow().x - ((leftElbow.x - leftHand.x) * armLeftLowerArmScale)),
+				(int) (skeleton.getLeftElbow().y - ((leftElbow.y - leftHand.y) * armLeftLowerArmScale))));
+
+		skeleton.setRightElbow(new Point(
+				(int) (skeleton.getRightShoulder().x + ((rightElbow.x - rightShoulder.x) * armRightUpperArmScale)),
+				(int) (skeleton.getRightShoulder().y + ((rightElbow.y - rightShoulder.y) * armRightUpperArmScale))));
+
+		skeleton.setRightHand(new Point(
+				(int) (skeleton.getRightElbow().x + ((rightHand.x - rightElbow.x) * armRightLowerArmScale)),
+				(int) (skeleton.getRightElbow().y + ((rightHand.y - rightElbow.y) * armRightLowerArmScale))));
+		
+//		if(true)
+//			return;
+
+		
+		// ///////////////////////////////////////////////////////////////
 		// TODO Stefan
 		skeleton.setLeftHandGrab(leftHandGrab);
 		skeleton.setRightHandGrab(rightHandGrab);
-		
+
 		if (leftHandGrab) {
 			Handle leftHandHandle;
-			if ((leftHandHandle = getHandleUnderHand(translate(leftHand, skeleton.getCenter()))) != null) {
-				skeleton.setLeftHand(translate(leftHandHandle, negativePoint(skeleton.getCenter())));
+			if ((leftHandHandle = getHandleUnderHand(translate(skeleton.getLeftHand(), skeleton.getCenter()))) != null) {
+				skeleton.setLeftHand(translate(leftHandHandle,
+						negativePoint(skeleton.getCenter())));
 				skeleton.setFalling(false);
-				if (ClimbOrDie.DEBUG) System.out.println("left hand attached to handle");
-			} else {
-				skeleton.setLeftHand(leftHand);
-			}
+				if (ClimbOrDie.DEBUG)
+					System.out.println("left hand attached to handle");
+			} 
 		}
 		if (rightHandGrab) {
 			Handle rightHandHandle;
-			if ((rightHandHandle = getHandleUnderHand(translate(rightHand, skeleton.getCenter()))) != null) {
-				skeleton.setRightHand(translate(rightHandHandle, negativePoint(skeleton.getCenter())));
+			if ((rightHandHandle = getHandleUnderHand(translate(skeleton.getRightHand(), skeleton.getCenter()))) != null) {
+				skeleton.setRightHand(translate(rightHandHandle,
+						negativePoint(skeleton.getCenter())));
 				skeleton.setFalling(false);
-				if (ClimbOrDie.DEBUG) System.out.println("right hand attached to handle");
-			} else {
-				skeleton.setRightHand(rightHand);
-			}
+				if (ClimbOrDie.DEBUG)
+					System.out.println("right hand attached to handle");
+			} 
 		}
-		if (! rightHandGrab && ! leftHandGrab) {
+		if (!rightHandGrab && !leftHandGrab) {
 			skeleton.setFalling(true);
 		}
 		if (skeleton.isFalling()) {
@@ -77,11 +96,11 @@ public class SkeletonController {
 		}
 		return null;
 	}
-	
+
 	private Point translate(Point p, Point delta) {
 		return new Point(p.x + delta.x, p.y + delta.y);
 	}
-	
+
 	private Point negativePoint(Point p) {
 		return new Point(-p.x, -p.y);
 	}

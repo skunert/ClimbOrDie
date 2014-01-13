@@ -30,6 +30,8 @@ public class KinectController {
 	private static int GRAB_THRESHOLD = 60;
 	private static int RELEASE_THRESHOLD = 100;
 
+	private static int REFERENCE_DIST = 1070;
+
 	private boolean grabLeftAverage[] = new boolean[1];
 	private int grabLeftAverageIndex = 0;
 	private float lastLeftHandSize;
@@ -67,25 +69,25 @@ public class KinectController {
 		return debug;
 	}
 
-	public void update() {
+	public boolean update() {
 		// update the cam
 		context.update();
 
 		// determine user
 		int[] userList = context.getUsers();
 		if (userList.length == 0)
-			return;
+			return false;
 
 		// refresh user id
 		if (userList[0] != userId) {
 			userId = userList[0];
 			context.startTrackingSkeleton(userId);
-			PApplet.println("USER FOUND");
+			PApplet.println("USER FOUND. WAITING FOR SKELETON...");
 		}
 
 		// skeleton not recognized yet
 		if (!context.isTrackingSkeleton(userId))
-			return;
+			return false;
 
 		// determine its hands
 		// right hand
@@ -123,6 +125,8 @@ public class KinectController {
 				SimpleOpenNI.SKEL_LEFT_SHOULDER, realPos);
 		context.convertRealWorldToProjective(realPos, leftShoulderPosition);
 
+		return true;
+
 	}
 
 	private boolean updateGrab(PVector handPos, boolean rightHand) {
@@ -132,7 +136,7 @@ public class KinectController {
 				* context.depthWidth();
 
 		// use last state
-		if (index > depthMap.length) {
+		if (index > depthMap.length || index < 0) {
 			if (rightHand) {
 				return grabRightAverage[grabRightAverage.length - 1];
 			} else {
@@ -141,6 +145,8 @@ public class KinectController {
 		}
 
 		double handZ = depthMap[index].z;
+
+		double distScale = REFERENCE_DIST / handZ;
 
 		// go upwards
 		int off = 0;
@@ -193,14 +199,14 @@ public class KinectController {
 
 			if (lastRightHandSize > 0) {
 				// TOP and BOTTOM are one point! (error)
-				if (handSize < ERROR_THRESHOLD) {
+				if (handSize < ERROR_THRESHOLD*distScale) {
 					// do not change grabAverage
 					grabRightAverageIndex--;
 					if (grabRightAverageIndex < -1)
 						grabRightAverageIndex = -1;
-				} else if (handSize < GRAB_THRESHOLD) {
+				} else if (handSize < GRAB_THRESHOLD*distScale) {
 					grabRightAverage[grabRightAverageIndex] = true;
-				} else if (handSize > RELEASE_THRESHOLD) {
+				} else if (handSize > RELEASE_THRESHOLD*distScale) {
 					grabRightAverage[grabRightAverageIndex] = false;
 				} else {
 					grabRightAverage[grabRightAverageIndex] = (avg == 1);
@@ -254,27 +260,29 @@ public class KinectController {
 	}
 
 	public Point getRightHandPosition() {
-		return new Point((int)rightHandPosition.x, (int) rightHandPosition.y);
+		return new Point((int) rightHandPosition.x, (int) rightHandPosition.y);
 	}
 
 	public Point getLeftHandPosition() {
-		return new Point((int)leftHandPosition.x, (int) leftHandPosition.y);
+		return new Point((int) leftHandPosition.x, (int) leftHandPosition.y);
 	}
 
 	public Point getLeftElbowPosition() {
-		return new Point((int)leftElbowPosition.x, (int) leftElbowPosition.y);
+		return new Point((int) leftElbowPosition.x, (int) leftElbowPosition.y);
 	}
 
 	public Point getLeftShoulderPosition() {
-		return new Point((int)leftShoulderPosition.x, (int) leftShoulderPosition.y);
+		return new Point((int) leftShoulderPosition.x,
+				(int) leftShoulderPosition.y);
 	}
 
 	public Point getRightElbowPosition() {
-		return new Point((int)rightElbowPosition.x, (int) rightElbowPosition.y);
+		return new Point((int) rightElbowPosition.x, (int) rightElbowPosition.y);
 	}
 
 	public Point getRightShoulderPosition() {
-		return new Point((int)rightShoulderPosition.x, (int) rightShoulderPosition.y);
+		return new Point((int) rightShoulderPosition.x,
+				(int) rightShoulderPosition.y);
 	}
 
 	public boolean isGrabRight() {
@@ -286,7 +294,9 @@ public class KinectController {
 	}
 
 	public void debug() {
+		pApplet.tint(255, 100);
 		pApplet.image(context.userImage(), 0, 0);
+		pApplet.noTint();
 		debugDrawSkeleton(userId);
 		// debugDrawHand(leftHandPosition);
 		// debugDrawHand(rightHandPosition);
@@ -323,19 +333,19 @@ public class KinectController {
 		context.drawLimb(userId, SimpleOpenNI.SKEL_RIGHT_SHOULDER,
 				SimpleOpenNI.SKEL_TORSO);
 
-		context.drawLimb(userId, SimpleOpenNI.SKEL_TORSO,
-				SimpleOpenNI.SKEL_LEFT_HIP);
-		context.drawLimb(userId, SimpleOpenNI.SKEL_LEFT_HIP,
-				SimpleOpenNI.SKEL_LEFT_KNEE);
-		context.drawLimb(userId, SimpleOpenNI.SKEL_LEFT_KNEE,
-				SimpleOpenNI.SKEL_LEFT_FOOT);
-
-		context.drawLimb(userId, SimpleOpenNI.SKEL_TORSO,
-				SimpleOpenNI.SKEL_RIGHT_HIP);
-		context.drawLimb(userId, SimpleOpenNI.SKEL_RIGHT_HIP,
-				SimpleOpenNI.SKEL_RIGHT_KNEE);
-		context.drawLimb(userId, SimpleOpenNI.SKEL_RIGHT_KNEE,
-				SimpleOpenNI.SKEL_RIGHT_FOOT);
+		// context.drawLimb(userId, SimpleOpenNI.SKEL_TORSO,
+		// SimpleOpenNI.SKEL_LEFT_HIP);
+		// context.drawLimb(userId, SimpleOpenNI.SKEL_LEFT_HIP,
+		// SimpleOpenNI.SKEL_LEFT_KNEE);
+		// context.drawLimb(userId, SimpleOpenNI.SKEL_LEFT_KNEE,
+		// SimpleOpenNI.SKEL_LEFT_FOOT);
+		//
+		// context.drawLimb(userId, SimpleOpenNI.SKEL_TORSO,
+		// SimpleOpenNI.SKEL_RIGHT_HIP);
+		// context.drawLimb(userId, SimpleOpenNI.SKEL_RIGHT_HIP,
+		// SimpleOpenNI.SKEL_RIGHT_KNEE);
+		// context.drawLimb(userId, SimpleOpenNI.SKEL_RIGHT_KNEE,
+		// SimpleOpenNI.SKEL_RIGHT_FOOT);
 	}
 
 }

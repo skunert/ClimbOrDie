@@ -129,7 +129,7 @@ public class SceneImpl extends Scene {
         skeleton = new Skeleton();
 
         // dummy skeleton init
-        skeleton.setCenter(new Point(400, 300));
+        skeleton.setCenter(new Point(300, 300));
         skeleton.setHead(new Point(0, -50));
         skeleton.setHip(new Point(0, 50));
         skeleton.setLeftShoulder(new Point(-20, -30));
@@ -152,7 +152,7 @@ public class SceneImpl extends Scene {
 	public List<Handle> generateHandles() {
 		ArrayList<Handle> handleList = new ArrayList<Handle>();
 		Random r = new Random();
-		for (int i = 0; i < 100; i++) {
+		for (int i = 0; i < 200; i++) {
 			Handle h = new Handle(ImageData.getRandomHandleType());
 			h.setLocation(r.nextFloat()*1280, r.nextFloat()*720); //random locations
 			handleList.add(h);
