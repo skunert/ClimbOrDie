@@ -1,4 +1,3 @@
-import java.awt.Point;
 import java.awt.Rectangle;
 
 import processing.core.PApplet;
@@ -20,7 +19,7 @@ public class ClimbOrDie extends PApplet {
 		background(0);
 		scene = new SceneImpl(this);
 		Skeleton skeleton = scene.initSkeleton();
-		sController = new SkeletonController(skeleton);
+		sController = new SkeletonController(scene);
 		kController = new KinectController(this, true); // TODO set to false
 														// later
 		renderer = new Renderer(this);
