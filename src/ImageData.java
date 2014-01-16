@@ -37,6 +37,8 @@ public class ImageData {
 	public Point crocodilePoint1;
 	
 	public PImage[] handles;
+	public PImage handleHighlight;
+	public int handlesMinHeight;
 	
 	public PImage headBack;
 	public Point headBackPoint1;
@@ -103,6 +105,8 @@ public class ImageData {
 		for (int i = 0; i < handles.length; i++) {
 			handles[i] = pApplet.loadImage("resources/images/handle" + (i+1) + "_50x50.png");
 		}
+		this.handleHighlight = pApplet.loadImage("resources/images/handleHighlight.png");
+		this.handlesMinHeight = 120;
 		
 		this.headBack = pApplet.loadImage("resources/images/head_back_116x200.png");
 		this.headBackPoint1 = new Point(116, 200);
@@ -219,10 +223,17 @@ public class ImageData {
 	public PImage getHandleByIndex(int index) {
 		return handles[index];
 	}
-	
-	// dirty, I know!
+
 	public static int getRandomHandleType() {
 		return (int) Math.floor((Math.random() * (HANDLES_NUM - 1)));
+	}
+
+	public PImage getHandleHighlight() {
+		return handleHighlight;
+	}
+
+	public int getHandlesMinHeight() {
+		return handlesMinHeight;
 	}
 
 	public PImage getHeadBack() {

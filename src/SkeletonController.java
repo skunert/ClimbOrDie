@@ -3,6 +3,8 @@ import java.awt.Point;
 public class SkeletonController {
 	private Scene scene;
 	private Skeleton skeleton;
+	private Handle leftHandHandle;
+	private Handle rightHandHandle;
 
 	public SkeletonController(Scene scene) {
 		this.scene = scene;
@@ -50,23 +52,32 @@ public class SkeletonController {
 		// TODO Stefan
 		skeleton.setLeftHandGrab(leftHandGrab);
 		skeleton.setRightHandGrab(rightHandGrab);
+		
+		if (leftHandHandle != null) {
+			leftHandHandle.setHighlight(false);
+		}
+		if (rightHandHandle != null) {
+			rightHandHandle.setHighlight(false);
+		}
 
+		leftHandHandle = getHandleUnderHand(translate(skeleton.getLeftHand(), skeleton.getCenter()));
+		rightHandHandle = getHandleUnderHand(translate(skeleton.getRightHand(), skeleton.getCenter()));
 		if (leftHandGrab) {
-			Handle leftHandHandle;
-			if ((leftHandHandle = getHandleUnderHand(translate(skeleton.getLeftHand(), skeleton.getCenter()))) != null) {
+			if (leftHandHandle != null) {
 				skeleton.setLeftHand(translate(leftHandHandle,
 						negativePoint(skeleton.getCenter())));
 				skeleton.setFalling(false);
+				leftHandHandle.setHighlight(true);
 				if (ClimbOrDie.DEBUG)
 					System.out.println("left hand attached to handle");
 			} 
 		}
 		if (rightHandGrab) {
-			Handle rightHandHandle;
-			if ((rightHandHandle = getHandleUnderHand(translate(skeleton.getRightHand(), skeleton.getCenter()))) != null) {
+			if (rightHandHandle != null) {
 				skeleton.setRightHand(translate(rightHandHandle,
 						negativePoint(skeleton.getCenter())));
 				skeleton.setFalling(false);
+				rightHandHandle.setHighlight(true);
 				if (ClimbOrDie.DEBUG)
 					System.out.println("right hand attached to handle");
 			} 

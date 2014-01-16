@@ -5,6 +5,8 @@ import processing.core.PApplet;
 public class ClimbOrDie extends PApplet {
 
 	public final static boolean DEBUG = true;
+	public final static int WIDTH = 720;
+	public final static int HEIGHT = 700;
 
 	private static final long serialVersionUID = 1L;
 	private SkeletonController sController;
@@ -17,7 +19,7 @@ public class ClimbOrDie extends PApplet {
 	}
 
 	public void setup() {
-		size(720, 700);
+		size(WIDTH, HEIGHT);
 		background(0);
 		scene = new SceneImpl(this);
 		scene.initSkeleton();
