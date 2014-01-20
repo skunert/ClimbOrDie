@@ -10,6 +10,7 @@ public class Renderer {
 	private boolean waterDirection = false;
 	private int crocoPos = 0;
 	private boolean crocoDirection = false;
+	private int gameStartCountdown = -1;
 
 	public Renderer(PApplet parent) {
 		this.parent = parent;
@@ -22,6 +23,7 @@ public class Renderer {
 		drawSkeleton(scene, area);		
 		// done in drawWater drawCrocodile(scene, area);
 		drawWater(scene, area);
+		drawBanner(scene, area);
 	}
 
 	private void drawHandles(Scene scene, Rectangle area) {
@@ -162,6 +164,34 @@ public class Renderer {
 		parent.scale(0.3f);
 		parent.image(imageData.getCrocodile(), 0, 0);
 		parent.popMatrix();
+	}
+	
+	private void drawBanner(Scene scene, Rectangle area) {
+		this.parent.imageMode(this.parent.CENTER);
+		this.parent.pushMatrix();
+		this.parent.translate(parent.width / 2, parent.height / 2);
+		this.parent.scale(0.5f); // <- resize banner
+		if (! scene.isPersonFound()) {
+			this.parent.image(imageData.getBanner_move(), 0, 0);	
+		} else if (! scene.isSkelFound()) {
+			this.parent.image(imageData.getBanner_move_more(), 0, 0);
+		} else if (! scene.isGameStarted()) {
+			if (gameStartCountdown == -1) {
+				gameStartCountdown = parent.millis();
+				this.parent.image(imageData.getBanner_start(), 0, 0);
+			} else if ((parent.millis() - gameStartCountdown) > 2000) { // <- wait 2 seconds before game is started 
+				scene.setGameStarted(true);
+				gameStartCountdown = -1;
+			} else {
+				this.parent.image(imageData.getBanner_start(), 0, 0);
+			}
+		} else if (scene.isGameLost()) {
+			this.parent.image(imageData.getBanner_lose(), 0, 0);
+		} else if (scene.isGameWon()) {
+			this.parent.image(imageData.getBanner_win(), 0, 0);
+		}
+		this.parent.popMatrix();
+		this.parent.imageMode(this.parent.CORNER);
 	}
 
 	private Point translate(Point p, Point delta) {

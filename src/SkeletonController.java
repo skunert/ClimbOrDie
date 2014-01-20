@@ -82,7 +82,7 @@ public class SkeletonController {
 					System.out.println("right hand attached to handle");
 			} 
 		}
-		if (!rightHandGrab && !leftHandGrab) {
+		if (!rightHandGrab && !leftHandGrab && scene.isGameStarted()) {
 			skeleton.setFalling(true);
 		}
 		if (skeleton.isFalling()) {

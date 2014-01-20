@@ -40,6 +40,10 @@ public class ClimbOrDie extends PApplet {
 				kController.getLeftHandPosition(),
 				kController.getRightHandPosition(), kController.isGrabLeft(),
 				kController.isGrabRight());
+		// TODO: change by kController??
+		scene.setPersonFound(true);
+		scene.setSkelFound(true);
+		//
 		// sController.updateSkeleton(null, null, null, null, new Point(-60,
 		// -50),
 		// new Point(60, -50), grab, grab2); // TODO: TO TEST, REMOVE ME!!
