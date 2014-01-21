@@ -33,6 +33,12 @@ public class ImageData {
 	
 	public PImage background;
 	
+	public PImage banner_lose;
+	public PImage banner_move;
+	public PImage banner_move_more;
+	public PImage banner_start;
+	public PImage banner_win;
+	
 	public PImage crocodile;
 	public Point crocodilePoint1;
 	
@@ -98,6 +104,12 @@ public class ImageData {
 		
 		this.background = pApplet.loadImage("resources/images/background2.png");
 		
+		this.banner_lose = pApplet.loadImage("resources/images/banner_lose.png");
+		this.banner_move = pApplet.loadImage("resources/images/banner_move.png");
+		this.banner_move_more = pApplet.loadImage("resources/images/banner_move_more.png");
+		this.banner_start = pApplet.loadImage("resources/images/banner_start.png");
+		this.banner_win = pApplet.loadImage("resources/images/banner_win.png");
+				
 		this.crocodile = pApplet.loadImage("resources/images/crocodile_106x27.png");
 		this.crocodilePoint1 = new Point(106, 27);
 		
@@ -202,6 +214,26 @@ public class ImageData {
 
 	public PImage getBackground() {
 		return background;
+	}
+
+	public PImage getBanner_lose() {
+		return banner_lose;
+	}
+
+	public PImage getBanner_move() {
+		return banner_move;
+	}
+
+	public PImage getBanner_move_more() {
+		return banner_move_more;
+	}
+
+	public PImage getBanner_start() {
+		return banner_start;
+	}
+
+	public PImage getBanner_win() {
+		return banner_win;
 	}
 
 	public PImage getCrocodile() {

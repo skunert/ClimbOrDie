@@ -108,18 +108,22 @@ public class SkeletonController {
 //					System.out.println("right hand attached to handle");
 			}
 		}
-		if (!rightHandGrab && !leftHandGrab) {
+		if (!rightHandGrab && !leftHandGrab && scene.isGameStarted() && !scene.isGameWon()) {
 			skeleton.setFalling(true);
 		}
 		if (skeleton.isFalling()) {
 			Point oldCenter = skeleton.getCenter();
 			if (oldCenter.y > scene.getLooseGameHeight()) {
 				skeleton.setFalling(false);
-				// TODO: Set Game Lost to scene!
+				scene.setGameLost(true);
 			} else {
 				// TODO some physics here??
 				skeleton.setCenter(new Point(oldCenter.x, oldCenter.y + 2));
 			}
+		}
+		if (skeleton.getCenter().y < scene.getWinGameHeight()) {
+			skeleton.setFalling(false);
+			scene.setGameWon(true);
 		}
 	}
 

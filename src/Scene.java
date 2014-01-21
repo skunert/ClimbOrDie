@@ -12,6 +12,12 @@ public abstract class Scene {
 	protected float wallHeight;
 	protected PApplet parent;
 	
+	protected boolean gameWon = false;
+	protected boolean gameLost = false;
+	protected boolean gameStarted = false;
+	protected boolean personFound = false;
+	protected boolean skelFound = false;
+	
 	public int winGameHeight;
     public int looseGameHeight; 
 	
@@ -42,6 +48,76 @@ public abstract class Scene {
 
 	public int getLooseGameHeight() {
 		return looseGameHeight;
+	}
+	
+	/**
+	 * @return the gameWon
+	 */
+	public boolean isGameWon() {
+		return gameWon;
+	}
+
+	/**
+	 * @return the gameLost
+	 */
+	public boolean isGameLost() {
+		return gameLost;
+	}
+
+	/**
+	 * @param gameWon the gameWon to set
+	 */
+	public void setGameWon(boolean gameWon) {
+		this.gameWon = gameWon;
+	}
+
+	/**
+	 * @param gameLost the gameLost to set
+	 */
+	public void setGameLost(boolean gameLost) {
+		this.gameLost = gameLost;
+	}
+
+	/**
+	 * @return the gameStarted
+	 */
+	public boolean isGameStarted() {
+		return gameStarted;
+	}
+
+	/**
+	 * @param gameStarted the gameStarted to set
+	 */
+	public void setGameStarted(boolean gameStarted) {
+		this.gameStarted = gameStarted;
+	}
+
+	/**
+	 * @return the personFound
+	 */
+	public boolean isPersonFound() {
+		return personFound;
+	}
+
+	/**
+	 * @param personFound the personFound to set
+	 */
+	public void setPersonFound(boolean personFound) {
+		this.personFound = personFound;
+	}
+
+	/**
+	 * @return the skelFound
+	 */
+	public boolean isSkelFound() {
+		return skelFound;
+	}
+
+	/**
+	 * @param skelFound the skelFound to set
+	 */
+	public void setSkelFound(boolean skelFound) {
+		this.skelFound = skelFound;
 	}
 
 	/**
