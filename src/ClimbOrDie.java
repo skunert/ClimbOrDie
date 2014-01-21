@@ -15,7 +15,7 @@ public class ClimbOrDie extends PApplet {
 	private Scene scene;
 
 	public static void main(String args[]) {
-		PApplet.main(new String[] { /* "--present", */"ClimbOrDie" });
+		PApplet.main(new String[] { /*"--present", */ "ClimbOrDie" });
 	}
 
 	public void setup() {

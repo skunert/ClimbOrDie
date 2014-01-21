@@ -105,7 +105,7 @@ public class ImageData {
 		for (int i = 0; i < handles.length; i++) {
 			handles[i] = pApplet.loadImage("resources/images/handle" + (i+1) + "_50x50.png");
 		}
-		this.handleHighlight = pApplet.loadImage("resources/images/handleHighlight.png");
+		this.handleHighlight = pApplet.loadImage("resources/images/handle_highlight.png");
 		this.handlesMinHeight = 120;
 		
 		this.headBack = pApplet.loadImage("resources/images/head_back_116x200.png");

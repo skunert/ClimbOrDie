@@ -6,6 +6,10 @@ public class SkeletonController {
 	private Handle leftHandHandle;
 	private Handle rightHandHandle;
 
+	private Point lastHandAvg;
+	
+	private static final int CLIMB_UP_LIMIT = 10;
+
 	public SkeletonController(Scene scene) {
 		this.scene = scene;
 		this.skeleton = scene.getSkeleton();
@@ -28,31 +32,51 @@ public class SkeletonController {
 		double armLeftUpperArmScale = iSizeUpperArm / kSizeLeftUpperArm;
 		double armRightUpperArmScale = iSizeUpperArm / kSizeRightUpperArm;
 
-		skeleton.setLeftElbow(new Point(
-				(int) (skeleton.getLeftShoulder().x - ((leftShoulder.x - leftElbow.x) * armLeftUpperArmScale)),
-				(int) (skeleton.getLeftShoulder().y - ((leftShoulder.y - leftElbow.y) * armLeftUpperArmScale))));
-
 		skeleton.setLeftHand(new Point(
 				(int) (skeleton.getLeftElbow().x - ((leftElbow.x - leftHand.x) * armLeftLowerArmScale)),
 				(int) (skeleton.getLeftElbow().y - ((leftElbow.y - leftHand.y) * armLeftLowerArmScale))));
+
+		skeleton.setRightHand(new Point(
+				(int) (skeleton.getRightElbow().x + ((rightHand.x - rightElbow.x) * armRightLowerArmScale)),
+				(int) (skeleton.getRightElbow().y + ((rightHand.y - rightElbow.y) * armRightLowerArmScale))));
+
+		Point currentHandAvg = new Point(
+				(int) ((skeleton.getLeftHand().x + skeleton.getCenter().x
+						+ skeleton.getRightHand().x + skeleton.getCenter().x) / 2),
+						(int) ((skeleton.getLeftHand().y + skeleton.getCenter().y
+								+ skeleton.getRightHand().y + skeleton.getCenter().y) / 2));
+
+		if (lastHandAvg == null)
+			lastHandAvg = currentHandAvg;
+
+		skeleton.setLeftElbow(new Point(
+				(int) (skeleton.getLeftShoulder().x - ((leftShoulder.x - leftElbow.x) * armLeftUpperArmScale)),
+				(int) (skeleton.getLeftShoulder().y - ((leftShoulder.y - leftElbow.y) * armLeftUpperArmScale))));
 
 		skeleton.setRightElbow(new Point(
 				(int) (skeleton.getRightShoulder().x + ((rightElbow.x - rightShoulder.x) * armRightUpperArmScale)),
 				(int) (skeleton.getRightShoulder().y + ((rightElbow.y - rightShoulder.y) * armRightUpperArmScale))));
 
-		skeleton.setRightHand(new Point(
-				(int) (skeleton.getRightElbow().x + ((rightHand.x - rightElbow.x) * armRightLowerArmScale)),
-				(int) (skeleton.getRightElbow().y + ((rightHand.y - rightElbow.y) * armRightLowerArmScale))));
-		
-//		if(true)
-//			return;
+		int yOffset = currentHandAvg.y - lastHandAvg.y;
 
-		
+		System.out.println(yOffset);
+
+		// only if both hands grab, skeleton can move x- or y-wards
+		if (leftHandHandle != null && leftHandHandle != null && yOffset > 1 && yOffset < CLIMB_UP_LIMIT) {
+
+			// the center must be shifted upwards
+			Point oldCenter = skeleton.getCenter();
+			skeleton.setCenter(new Point(oldCenter.x, oldCenter.y - yOffset));
+
+		}
+
+		lastHandAvg = currentHandAvg;
+
 		// ///////////////////////////////////////////////////////////////
 		// TODO Stefan
 		skeleton.setLeftHandGrab(leftHandGrab);
 		skeleton.setRightHandGrab(rightHandGrab);
-		
+
 		if (leftHandHandle != null) {
 			leftHandHandle.setHighlight(false);
 		}
@@ -60,17 +84,19 @@ public class SkeletonController {
 			rightHandHandle.setHighlight(false);
 		}
 
-		leftHandHandle = getHandleUnderHand(translate(skeleton.getLeftHand(), skeleton.getCenter()));
-		rightHandHandle = getHandleUnderHand(translate(skeleton.getRightHand(), skeleton.getCenter()));
+		leftHandHandle = getHandleUnderHand(translate(skeleton.getLeftHand(),
+				skeleton.getCenter()));
+		rightHandHandle = getHandleUnderHand(translate(skeleton.getRightHand(),
+				skeleton.getCenter()));
 		if (leftHandGrab) {
 			if (leftHandHandle != null) {
 				skeleton.setLeftHand(translate(leftHandHandle,
 						negativePoint(skeleton.getCenter())));
 				skeleton.setFalling(false);
 				leftHandHandle.setHighlight(true);
-				if (ClimbOrDie.DEBUG)
-					System.out.println("left hand attached to handle");
-			} 
+//				if (ClimbOrDie.DEBUG)
+//					System.out.println("left hand attached to handle");
+			}
 		}
 		if (rightHandGrab) {
 			if (rightHandHandle != null) {
@@ -78,9 +104,9 @@ public class SkeletonController {
 						negativePoint(skeleton.getCenter())));
 				skeleton.setFalling(false);
 				rightHandHandle.setHighlight(true);
-				if (ClimbOrDie.DEBUG)
-					System.out.println("right hand attached to handle");
-			} 
+//				if (ClimbOrDie.DEBUG)
+//					System.out.println("right hand attached to handle");
+			}
 		}
 		if (!rightHandGrab && !leftHandGrab) {
 			skeleton.setFalling(true);
