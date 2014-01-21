@@ -169,13 +169,17 @@ public class Renderer {
 	private void drawBanner(Scene scene, Rectangle area) {
 		this.parent.imageMode(this.parent.CENTER);
 		this.parent.pushMatrix();
-		this.parent.translate(parent.width / 2, parent.height / 2);
-		this.parent.scale(0.5f); // <- resize banner
 		if (! scene.isPersonFound()) {
+			this.parent.translate(parent.width / 2, parent.height / 3 * 2);
+			this.parent.scale(0.5f); // <- resize banner
 			this.parent.image(imageData.getBanner_move(), 0, 0);	
 		} else if (! scene.isSkelFound()) {
+			this.parent.translate(parent.width / 2, parent.height / 3 * 2);
+			this.parent.scale(0.5f); // <- resize banner
 			this.parent.image(imageData.getBanner_move_more(), 0, 0);
 		} else if (! scene.isGameStarted()) {
+			this.parent.translate(parent.width / 2, parent.height / 2);
+			this.parent.scale(0.5f); // <- resize banner
 			if (gameStartCountdown == -1) {
 				gameStartCountdown = parent.millis();
 				this.parent.image(imageData.getBanner_start(), 0, 0);
@@ -186,8 +190,12 @@ public class Renderer {
 				this.parent.image(imageData.getBanner_start(), 0, 0);
 			}
 		} else if (scene.isGameLost()) {
+			this.parent.translate(parent.width / 2, parent.height / 2);
+			this.parent.scale(0.5f); // <- resize banner
 			this.parent.image(imageData.getBanner_lose(), 0, 0);
 		} else if (scene.isGameWon()) {
+			this.parent.translate(parent.width / 2, parent.height / 2);
+			this.parent.scale(0.5f); // <- resize banner
 			this.parent.image(imageData.getBanner_win(), 0, 0);
 		}
 		this.parent.popMatrix();

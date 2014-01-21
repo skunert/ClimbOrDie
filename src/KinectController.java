@@ -82,7 +82,6 @@ public class KinectController {
 		if (userList[0] != userId) {
 			userId = userList[0];
 			context.startTrackingSkeleton(userId);
-			PApplet.println("USER FOUND. WAITING FOR SKELETON...");
 		}
 
 		// skeleton not recognized yet
@@ -199,14 +198,14 @@ public class KinectController {
 
 			if (lastRightHandSize > 0) {
 				// TOP and BOTTOM are one point! (error)
-				if (handSize < ERROR_THRESHOLD*distScale) {
+				if (handSize < ERROR_THRESHOLD * distScale) {
 					// do not change grabAverage
 					grabRightAverageIndex--;
 					if (grabRightAverageIndex < -1)
 						grabRightAverageIndex = -1;
-				} else if (handSize < GRAB_THRESHOLD*distScale) {
+				} else if (handSize < GRAB_THRESHOLD * distScale) {
 					grabRightAverage[grabRightAverageIndex] = true;
-				} else if (handSize > RELEASE_THRESHOLD*distScale) {
+				} else if (handSize > RELEASE_THRESHOLD * distScale) {
 					grabRightAverage[grabRightAverageIndex] = false;
 				} else {
 					grabRightAverage[grabRightAverageIndex] = (avg == 1);
@@ -346,6 +345,38 @@ public class KinectController {
 		// SimpleOpenNI.SKEL_RIGHT_KNEE);
 		// context.drawLimb(userId, SimpleOpenNI.SKEL_RIGHT_KNEE,
 		// SimpleOpenNI.SKEL_RIGHT_FOOT);
+	}
+
+	public boolean updateCalibration(Scene scene) {
+		// update the cam
+		context.update();
+
+		pApplet.imageMode(PApplet.CENTER);
+		pApplet.pushMatrix();
+		pApplet.image(context.userImage(), pApplet.getWidth() / 2,
+				pApplet.getHeight() / 3, context.userImage().width / 2,
+				context.userImage().height / 2);
+
+		pApplet.popMatrix();
+		pApplet.imageMode(PApplet.CORNER);
+
+		int[] userList = context.getUsers();
+
+		// no user found yet
+		if (userList.length != 0) {
+			// refresh user id
+			if (userList[0] != userId) {
+				userId = userList[0];
+				context.startTrackingSkeleton(userId);
+			}
+			scene.setPersonFound(true);
+		}
+
+		if (context.isTrackingSkeleton(userId)) {
+			scene.setSkelFound(true);
+			return true;
+		}
+		return false;
 	}
 
 }

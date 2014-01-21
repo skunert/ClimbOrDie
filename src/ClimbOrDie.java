@@ -4,7 +4,7 @@ import processing.core.PApplet;
 
 public class ClimbOrDie extends PApplet {
 
-	public final static boolean DEBUG = true;
+	public final static boolean DEBUG = false;
 	public final static int WIDTH = 720;
 	public final static int HEIGHT = 700;
 
@@ -14,8 +14,10 @@ public class ClimbOrDie extends PApplet {
 	private Renderer renderer;
 	private Scene scene;
 
+	private boolean gameStarted;
+
 	public static void main(String args[]) {
-		PApplet.main(new String[] { /*"--present", */ "ClimbOrDie" });
+		PApplet.main(new String[] { "--present","ClimbOrDie" });
 	}
 
 	public void setup() {
@@ -24,30 +26,31 @@ public class ClimbOrDie extends PApplet {
 		scene = new SceneImpl(this);
 		scene.initSkeleton();
 		sController = new SkeletonController(scene);
-		// TODO set to false later
 		kController = new KinectController(this, ClimbOrDie.DEBUG);
 		renderer = new Renderer(this);
 	}
 
 	public void draw() {
-		boolean dataReady = kController.update();
 
-		if(dataReady)
-		sController.updateSkeleton(kController.getLeftElbowPosition(),
-				kController.getRightElbowPosition(),
-				kController.getLeftShoulderPosition(),
-				kController.getRightShoulderPosition(),
-				kController.getLeftHandPosition(),
-				kController.getRightHandPosition(), kController.isGrabLeft(),
-				kController.isGrabRight());
-		// TODO: change by kController??
-		scene.setPersonFound(true);
-		scene.setSkelFound(true);
-		//
-		// sController.updateSkeleton(null, null, null, null, new Point(-60,
-		// -50),
-		// new Point(60, -50), grab, grab2); // TODO: TO TEST, REMOVE ME!!
+		if (gameStarted) {
+			boolean dataReady = kController.update();
+
+			if (dataReady) {
+				sController.updateSkeleton(kController.getLeftElbowPosition(),
+						kController.getRightElbowPosition(),
+						kController.getLeftShoulderPosition(),
+						kController.getRightShoulderPosition(),
+						kController.getLeftHandPosition(),
+						kController.getRightHandPosition(),
+						kController.isGrabLeft(), kController.isGrabRight());
+			}
+		}
+
 		renderer.drawScene(scene, new Rectangle(30, 30, 101, 250));
+
+		if (!gameStarted) {
+			gameStarted = kController.updateCalibration(scene);
+		}
 
 		if (kController.isDebug())
 			kController.debug();

@@ -7,7 +7,7 @@ public class SkeletonController {
 	private Handle rightHandHandle;
 
 	private Point lastHandAvg;
-	
+
 	private static final int CLIMB_UP_LIMIT = 10;
 
 	public SkeletonController(Scene scene) {
@@ -43,8 +43,8 @@ public class SkeletonController {
 		Point currentHandAvg = new Point(
 				(int) ((skeleton.getLeftHand().x + skeleton.getCenter().x
 						+ skeleton.getRightHand().x + skeleton.getCenter().x) / 2),
-						(int) ((skeleton.getLeftHand().y + skeleton.getCenter().y
-								+ skeleton.getRightHand().y + skeleton.getCenter().y) / 2));
+				(int) ((skeleton.getLeftHand().y + skeleton.getCenter().y
+						+ skeleton.getRightHand().y + skeleton.getCenter().y) / 2));
 
 		if (lastHandAvg == null)
 			lastHandAvg = currentHandAvg;
@@ -59,10 +59,9 @@ public class SkeletonController {
 
 		int yOffset = currentHandAvg.y - lastHandAvg.y;
 
-		System.out.println(yOffset);
-
-		// only if both hands grab, skeleton can move x- or y-wards
-		if (leftHandHandle != null && leftHandHandle != null && yOffset > 1 && yOffset < CLIMB_UP_LIMIT) {
+		// only if both hands grab, skeleton can move upwards
+		if (leftHandHandle != null && leftHandHandle != null && yOffset > 1
+				&& yOffset < CLIMB_UP_LIMIT) {
 
 			// the center must be shifted upwards
 			Point oldCenter = skeleton.getCenter();
@@ -94,8 +93,8 @@ public class SkeletonController {
 						negativePoint(skeleton.getCenter())));
 				skeleton.setFalling(false);
 				leftHandHandle.setHighlight(true);
-//				if (ClimbOrDie.DEBUG)
-//					System.out.println("left hand attached to handle");
+				// if (ClimbOrDie.DEBUG)
+				// System.out.println("left hand attached to handle");
 			}
 		}
 		if (rightHandGrab) {
@@ -104,26 +103,32 @@ public class SkeletonController {
 						negativePoint(skeleton.getCenter())));
 				skeleton.setFalling(false);
 				rightHandHandle.setHighlight(true);
-//				if (ClimbOrDie.DEBUG)
-//					System.out.println("right hand attached to handle");
+				// if (ClimbOrDie.DEBUG)
+				// System.out.println("right hand attached to handle");
 			}
 		}
-		if (!rightHandGrab && !leftHandGrab && scene.isGameStarted() && !scene.isGameWon()) {
+		if (!rightHandGrab && !leftHandGrab && scene.isGameStarted()
+				&& !scene.isGameWon()) {
 			skeleton.setFalling(true);
 		}
 		if (skeleton.isFalling()) {
 			Point oldCenter = skeleton.getCenter();
 			if (oldCenter.y > scene.getLooseGameHeight()) {
-				skeleton.setFalling(false);
-				scene.setGameLost(true);
-			} else {
+//				skeleton.setFalling(false); FIXME
+//				scene.setGameLost(true);
+			} 
+			else {
 				// TODO some physics here??
 				skeleton.setCenter(new Point(oldCenter.x, oldCenter.y + 2));
 			}
 		}
-		if (skeleton.getCenter().y < scene.getWinGameHeight()) {
-			skeleton.setFalling(false);
-			scene.setGameWon(true);
+		
+		if ((skeleton.getCenter().y + skeleton.getLeftHand().y) < scene
+				.getWinGameHeight()
+				|| (skeleton.getCenter().y + skeleton.getRightHand().y) < scene
+						.getWinGameHeight()) {
+//			skeleton.setFalling(false); FIXME
+//			scene.setGameWon(true);
 		}
 	}
 
