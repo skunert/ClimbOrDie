@@ -129,7 +129,7 @@ public class SceneImpl extends Scene {
         skeleton = new Skeleton();
 
         // dummy skeleton init
-        skeleton.setCenter(new Point(300, 300));
+        skeleton.setCenter(new Point(ClimbOrDie.WIDTH/2, ClimbOrDie.HEIGHT/2));
         skeleton.setHead(new Point(0, -50));
         skeleton.setHip(new Point(0, 50));
         skeleton.setLeftShoulder(new Point(-20, -30));
@@ -138,10 +138,10 @@ public class SceneImpl extends Scene {
         skeleton.setRightElbow(new Point(50, -20));
         skeleton.setLeftHand(new Point(-60, -50));
         skeleton.setRightHand(new Point(60, -50));
-        skeleton.setLeftKnee(new Point(-30, 70));
-        skeleton.setRightKnee(new Point(30, 70));
-        skeleton.setLeftFoot(new Point(-40, 100));
-        skeleton.setRightFoot(new Point(40, 100));
+        skeleton.setLeftKnee(new Point(-35, 70));
+        skeleton.setRightKnee(new Point(35, 70));
+        skeleton.setLeftFoot(new Point(-40, 120));
+        skeleton.setRightFoot(new Point(40, 120));
         skeleton.setRightHandGrab(true);
         skeleton.setLeftHandGrab(true);
 
@@ -156,8 +156,8 @@ public class SceneImpl extends Scene {
         int handleMinHeight = ImageData.HANDLE_MIN_HEIGHT;
         int handleCountX = ImageData.HANDLE_COUNT_X;
         int handleCountY = ImageData.HANDLE_COUNT_Y;
-        int backgroundWidth = ImageData.BACKGROUND_WIDTH;
-        int backgroundHeight = ImageData.BACKGROUND_HEIGHT;
+        int backgroundWidth = ClimbOrDie.WIDTH;
+        int backgroundHeight = ClimbOrDie.HEIGHT;
         float handleJitterX = ImageData.HANDLE_JITTER_X;
         float handleJitterY = ImageData.HANDLE_JITTER_Y;
 
@@ -165,7 +165,7 @@ public class SceneImpl extends Scene {
         int handleDistanceY = backgroundHeight/handleCountY;
         for (int xi = 0; xi < handleCountX; xi++) {
             for (int yi = 0; yi < handleCountY; yi++) {
-                float x = xi*handleDistanceX;
+                float x = xi*handleDistanceX + handleDistanceX*0.7f;
                 float y = handleMinHeight + yi*handleDistanceY;
 
                 // add jitter to handle positions

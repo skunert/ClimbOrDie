@@ -11,13 +11,9 @@ public class ImageData {
 	
 	private static int HANDLES_NUM = 8;
 
-    private static int HANDLE_COUNT = 300;
-
-    public static int HANDLE_MIN_HEIGHT = 80;
-    public static int HANDLE_COUNT_X = 18;
-    public static int HANDLE_COUNT_Y = 12;
-    public static int BACKGROUND_WIDTH = 750;
-    public static int BACKGROUND_HEIGHT = 700;
+    public static int HANDLE_MIN_HEIGHT = 90;
+    public static int HANDLE_COUNT_X = 21;
+    public static int HANDLE_COUNT_Y = 15;
     public static float HANDLE_JITTER_X = 0.7f;
     public static float HANDLE_JITTER_Y = 0.7f;
 	
@@ -112,9 +108,7 @@ public class ImageData {
 		this.armUpperRightPoint2 = new Point(46, 204);
 		
 		this.background = pApplet.loadImage("resources/images/background2.png");
-        BACKGROUND_HEIGHT = this.background.height;
-        BACKGROUND_WIDTH = this.background.width;
-		
+
 		this.banner_lose = pApplet.loadImage("resources/images/banner_lose.png");
 		this.banner_move = pApplet.loadImage("resources/images/banner_move.png");
 		this.banner_move_more = pApplet.loadImage("resources/images/banner_move_more.png");
