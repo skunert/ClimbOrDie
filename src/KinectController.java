@@ -1,6 +1,7 @@
 import java.awt.Point;
 
 import processing.core.PApplet;
+import processing.core.PImage;
 import processing.core.PVector;
 import SimpleOpenNI.SimpleOpenNI;
 
@@ -17,11 +18,11 @@ public class KinectController {
 	private PVector rightShoulderPosition = new PVector();
 	private PVector leftShoulderPosition = new PVector();
 
-	private boolean grabLeftAverage[] = new boolean[3];
+	private boolean grabLeftAverage[] = new boolean[2];
 	private int grabLeftAverageIndex = 0;
 	private boolean grabLeft;
 
-	private boolean grabRightAverage[] = new boolean[3];
+	private boolean grabRightAverage[] = new boolean[2];
 	private int grabRightAverageIndex = 0;
 	private boolean grabRight;
 
@@ -32,8 +33,11 @@ public class KinectController {
 	private static int MIN_HAND_Z_DEPTH_DIFF = 300;
 	private static int REFERENCE_TORSO = 1100;
 
+	private PImage bufferedImage;
+
 	public KinectController(PApplet pApplet, boolean debug) {
-		this.context = new SimpleOpenNI(pApplet);
+		this.context = new SimpleOpenNI(pApplet,
+				SimpleOpenNI.RUN_MODE_MULTI_THREADED);
 		this.pApplet = pApplet;
 		this.debug = debug;
 		if (context.isInit() == false) {
@@ -288,18 +292,19 @@ public class KinectController {
 		// SimpleOpenNI.SKEL_RIGHT_FOOT);
 	}
 
+	public PImage getBufferedImage() {
+		synchronized (this) {
+			return bufferedImage;
+		}
+	}
+
 	public boolean updateCalibration(Scene scene) {
 		// update the cam
 		context.update();
 
-		pApplet.imageMode(PApplet.CENTER);
-		pApplet.pushMatrix();
-		pApplet.image(context.userImage(), pApplet.getWidth() / 2,
-				pApplet.getHeight() / 3, context.userImage().width / 2,
-				context.userImage().height / 2);
-
-		pApplet.popMatrix();
-		pApplet.imageMode(PApplet.CORNER);
+		synchronized (this) {
+			this.bufferedImage = context.userImage();
+		}
 
 		int[] userList = context.getUsers();
 

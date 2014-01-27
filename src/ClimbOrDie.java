@@ -4,7 +4,7 @@ import processing.core.PApplet;
 
 public class ClimbOrDie extends PApplet {
 
-	public final static boolean DEBUG = true;
+	public final static boolean DEBUG = false;
 	public final static int WIDTH = 720;
 	public final static int HEIGHT = 700;
 
@@ -15,9 +15,10 @@ public class ClimbOrDie extends PApplet {
 	private Scene scene;
 
 	private boolean gameStarted;
+	private boolean dataReady;
 
 	public static void main(String args[]) {
-		PApplet.main(new String[] { /*"--present", */"ClimbOrDie" });
+		PApplet.main(new String[] { /* "--present", */"ClimbOrDie" });
 	}
 
 	public void setup() {
@@ -28,13 +29,30 @@ public class ClimbOrDie extends PApplet {
 		sController = new SkeletonController(scene);
 		kController = new KinectController(this, ClimbOrDie.DEBUG);
 		renderer = new Renderer(this);
+
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				while (!Thread.interrupted()) {
+					try {
+						Thread.sleep(50);
+					} catch (InterruptedException e) {
+						// do nothing
+					}
+					if (ClimbOrDie.this.gameStarted)
+						ClimbOrDie.this.dataReady = kController.update();
+					else
+						ClimbOrDie.this.gameStarted = kController
+								.updateCalibration(scene);
+				}
+			}
+		}).start();
 	}
 
 	public void draw() {
 
 		if (gameStarted) {
-			boolean dataReady = kController.update();
-
 			if (dataReady) {
 				sController.updateSkeleton(kController.getLeftElbowPosition(),
 						kController.getRightElbowPosition(),
@@ -48,8 +66,17 @@ public class ClimbOrDie extends PApplet {
 
 		renderer.drawScene(scene, new Rectangle(30, 30, 101, 250));
 
-		if (!gameStarted) {
-			gameStarted = kController.updateCalibration(scene);
+		synchronized (kController) {
+			if (!gameStarted) {
+				imageMode(PApplet.CENTER);
+				pushMatrix();
+				image(kController.getBufferedImage(), getWidth() / 2,
+						getHeight() / 3,
+						kController.getBufferedImage().width / 2,
+						kController.getBufferedImage().height / 2);
+				popMatrix();
+				imageMode(PApplet.CORNER);
+			}
 		}
 
 		if (kController.isDebug())
