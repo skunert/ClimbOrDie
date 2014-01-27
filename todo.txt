@@ -1,3 +1,10 @@
+todo's:
 - fullscreen mode
 - auto-grab (snap to handle): arm sollte nicht einfach größer/kleiner werden
-- auto-grab: bei gegrabbtem handle sollte die hand nicht auf ein anderes handle umsnappen können
+- auto-grab: bei gegrabbtem handle sollte die hand nicht auf ein anderes handle umsnappen können:
+	- evtl. schulter und armgelenke der kinect bei grab komplett ignorieren
+- schneller fallen
+
+- videodreh: mi., 29.01., EN 147
+	- kamera: sebastian
+	- stativ: stefan
