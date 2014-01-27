@@ -48,11 +48,9 @@ public class ClimbOrDie extends PApplet {
 
 		renderer.drawScene(scene, new Rectangle(30, 30, 101, 250));
 
-        /*
 		if (!gameStarted) {
 			gameStarted = kController.updateCalibration(scene);
 		}
-		*/
 
 		if (kController.isDebug())
 			kController.debug();
