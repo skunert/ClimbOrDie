@@ -5,6 +5,9 @@ public class SkeletonController {
 	private Skeleton skeleton;
 	private Handle leftHandHandle;
 	private Handle rightHandHandle;
+	
+	private boolean hasLeftHandle = false;
+	private boolean hasRightHandle = false;
 
 	private Point lastHandAvg;
 
@@ -58,7 +61,7 @@ public class SkeletonController {
 		int yOffset = currentHandAvg.y - lastHandAvg.y;
 
 		// only if both hands grab, skeleton can move upwards
-		if (leftHandHandle != null && leftHandHandle != null && yOffset > 1
+		if (hasLeftHandle && hasRightHandle && yOffset > 1
 				&& yOffset < Skeleton.climpUpLimit) {
 
 			// the center must be shifted upwards
@@ -81,11 +84,11 @@ public class SkeletonController {
 			rightHandHandle.setHighlight(false);
 		}
 
-		if (! leftHandGrab) {
+		if (! hasLeftHandle) {
 			leftHandHandle = getHandleUnderHand(translate(skeleton.getLeftHand(),
 					skeleton.getCenter()));
 		}
-		if (! rightHandGrab) {
+		if (! hasRightHandle) {
 			rightHandHandle = getHandleUnderHand(translate(skeleton.getRightHand(),
 					skeleton.getCenter()));
 		}
@@ -93,6 +96,7 @@ public class SkeletonController {
 			if (leftHandHandle != null) {
 				skeleton.setLeftHand(translate(leftHandHandle,
 						negativePoint(skeleton.getCenter())));
+				hasLeftHandle = true;
 				skeleton.setFalling(false);
 				leftHandHandle.setHighlight(true);
 				// if (ClimbOrDie.DEBUG)
@@ -103,6 +107,7 @@ public class SkeletonController {
 			if (rightHandHandle != null) {
 				skeleton.setRightHand(translate(rightHandHandle,
 						negativePoint(skeleton.getCenter())));
+				hasRightHandle = true;
 				skeleton.setFalling(false);
 				rightHandHandle.setHighlight(true);
 				// if (ClimbOrDie.DEBUG)
@@ -112,6 +117,12 @@ public class SkeletonController {
 		if (!rightHandGrab && !leftHandGrab && scene.isGameStarted()
 				&& !scene.isGameWon()) {
 			skeleton.setFalling(true);
+		}
+		if (!leftHandGrab) {
+			hasLeftHandle = false;
+		}
+		if (!rightHandGrab) {
+			hasRightHandle = false;
 		}
 		if (skeleton.isFalling()) {
 			Point oldCenter = skeleton.getCenter();

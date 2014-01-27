@@ -4,8 +4,8 @@ import processing.core.PApplet;
 
 public class ClimbOrDie extends PApplet {
 
-	public final static boolean DEBUG = true;
-	public static int WIDTH = 920;
+	public final static boolean DEBUG = false;
+	public static int WIDTH = 720;
 	public static int HEIGHT = 700;
 
 	private static final long serialVersionUID = 1L;
@@ -15,15 +15,16 @@ public class ClimbOrDie extends PApplet {
 	private Scene scene;
 
 	private boolean gameStarted;
+	private boolean dataReady;
 
 	public static void main(String args[]) {
 		PApplet.main(new String[] { "--present", "ClimbOrDie" });
 	}
 
 	public void setup() {
-        Dimension screensize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
-        WIDTH = screensize.width;
-        HEIGHT = screensize.height;
+        Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+        WIDTH = screenSize.width;
+        HEIGHT = screenSize.height;
         ImageData.HANDLE_MIN_HEIGHT = (int)(HEIGHT*0.11);
         size(WIDTH, HEIGHT);
 		background(0);
@@ -32,13 +33,30 @@ public class ClimbOrDie extends PApplet {
 		sController = new SkeletonController(scene);
 		kController = new KinectController(this, ClimbOrDie.DEBUG);
 		renderer = new Renderer(this);
+
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				while (!Thread.interrupted()) {
+					try {
+						Thread.sleep(50);
+					} catch (InterruptedException e) {
+						// do nothing
+					}
+					if (ClimbOrDie.this.gameStarted)
+						ClimbOrDie.this.dataReady = kController.update();
+					else
+						ClimbOrDie.this.gameStarted = kController
+								.updateCalibration(scene);
+				}
+			}
+		}).start();
 	}
 
 	public void draw() {
 
 		if (gameStarted) {
-			boolean dataReady = kController.update();
-
 			if (dataReady) {
 				sController.updateSkeleton(kController.getLeftElbowPosition(),
 						kController.getRightElbowPosition(),
@@ -52,8 +70,17 @@ public class ClimbOrDie extends PApplet {
 
 		renderer.drawScene(scene, new Rectangle(30, 30, 101, 250));
 
-		if (!gameStarted) {
-			gameStarted = kController.updateCalibration(scene);
+		synchronized (kController) {
+			if (!gameStarted) {
+				imageMode(PApplet.CENTER);
+				pushMatrix();
+				image(kController.getBufferedImage(), getWidth() / 2,
+						getHeight() / 3,
+						kController.getBufferedImage().width / 2,
+						kController.getBufferedImage().height / 2);
+				popMatrix();
+				imageMode(PApplet.CORNER);
+			}
 		}
 
 		if (kController.isDebug())

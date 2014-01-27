@@ -23,8 +23,8 @@ public class Skeleton {
     public final static int lowerArmLength = 32;
     public final static int upperArmLength = 32;
     public static final int climpUpLimit = 10;
-	public static final int fallingSpeed = 8;
-	public static final int handleSnapDist = 10;
+	public static final int fallingSpeed = 1;
+	public static final int handleSnapDist = 50;
     
     public final static int minHandleGrabDist = 10;
     

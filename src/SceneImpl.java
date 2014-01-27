@@ -12,7 +12,7 @@ public class SceneImpl extends Scene {
 	public SceneImpl(PApplet parent) {
 		super(parent);
 		this.handles = generateHandles();
-		this.winGameHeight = 200;
+		this.winGameHeight = 80;
 		this.looseGameHeight = parent.getHeight() - 100;
 	}
 
