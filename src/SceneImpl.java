@@ -152,11 +152,34 @@ public class SceneImpl extends Scene {
 	public List<Handle> generateHandles() {
 		ArrayList<Handle> handleList = new ArrayList<Handle>();
 		Random r = new Random();
-		for (int i = 0; i < 650; i++) {
-			Handle h = new Handle(ImageData.getRandomHandleType());
-			h.setLocation(r.nextFloat()*ClimbOrDie.WIDTH, r.nextFloat()*ClimbOrDie.HEIGHT); //random locations
-			handleList.add(h);
-		}
+
+        int handleMinHeight = ImageData.HANDLE_MIN_HEIGHT;
+        int handleCountX = ImageData.HANDLE_COUNT_X;
+        int handleCountY = ImageData.HANDLE_COUNT_Y;
+        int backgroundWidth = ImageData.BACKGROUND_WIDTH;
+        int backgroundHeight = ImageData.BACKGROUND_HEIGHT;
+        float handleJitterX = ImageData.HANDLE_JITTER_X;
+        float handleJitterY = ImageData.HANDLE_JITTER_Y;
+
+        int handleDistanceX = backgroundWidth/handleCountX;
+        int handleDistanceY = backgroundHeight/handleCountY;
+        for (int xi = 0; xi < handleCountX; xi++) {
+            for (int yi = 0; yi < handleCountY; yi++) {
+                float x = xi*handleDistanceX;
+                float y = handleMinHeight + yi*handleDistanceY;
+
+                // add jitter to handle positions
+                x = x + (r.nextFloat()-0.5f)*handleDistanceX*handleJitterX;
+                if (yi > 0) {
+                    y = y + (r.nextFloat()-0.5f)*handleDistanceY*handleJitterY;
+                }
+
+                Handle h = new Handle(ImageData.getRandomHandleType());
+                h.setLocation(x, y);
+                handleList.add(h);
+            }
+        }
+
 		return handleList;
 	}
 

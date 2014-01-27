@@ -33,12 +33,10 @@ public class Renderer {
 			this.parent.translate(h.x, h.y);
 			this.parent.scale(0.2f);
 			// TODO: Handles move with background?
-			if (h.y > imageData.getHandlesMinHeight()) {
-				this.parent.image(imageData.getHandleByIndex(h.type), 0, 0);
-				if (h.isHighlight()) {
-					this.parent.image(imageData.getHandleHighlight(), 0, 0);
-				}
-			}
+            this.parent.image(imageData.getHandleByIndex(h.type), 0, 0);
+            if (h.isHighlight()) {
+                this.parent.image(imageData.getHandleHighlight(), 0, 0);
+            }
 			this.parent.popMatrix();
 		}
 		this.parent.imageMode(this.parent.CORNER);

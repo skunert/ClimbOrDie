@@ -41,6 +41,7 @@ public class KinectController {
 	private float lastRightHandSize;
 
 	public KinectController(PApplet pApplet, boolean debug) {
+        /*
 		this.context = new SimpleOpenNI(pApplet);
 		this.pApplet = pApplet;
 		this.debug = debug;
@@ -63,6 +64,7 @@ public class KinectController {
 
 		context.enableHand();
 		context.startGesture(SimpleOpenNI.GESTURE_HAND_RAISE);
+		*/
 	}
 
 	public boolean isDebug() {
