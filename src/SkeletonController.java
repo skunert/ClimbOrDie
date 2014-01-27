@@ -8,8 +8,6 @@ public class SkeletonController {
 
 	private Point lastHandAvg;
 
-	private static final int CLIMB_UP_LIMIT = 10;
-
 	public SkeletonController(Scene scene) {
 		this.scene = scene;
 		this.skeleton = scene.getSkeleton();
@@ -60,8 +58,8 @@ public class SkeletonController {
 		int yOffset = currentHandAvg.y - lastHandAvg.y;
 
 		// only if both hands grab, skeleton can move upwards
-		if (leftHandHandle != null && leftHandHandle != null && yOffset > 2
-				&& yOffset < CLIMB_UP_LIMIT) {
+		if (leftHandHandle != null && leftHandHandle != null && yOffset > 1
+				&& yOffset < Skeleton.climpUpLimit) {
 
 			// the center must be shifted upwards
 			Point oldCenter = skeleton.getCenter();
@@ -83,10 +81,14 @@ public class SkeletonController {
 			rightHandHandle.setHighlight(false);
 		}
 
-		leftHandHandle = getHandleUnderHand(translate(skeleton.getLeftHand(),
-				skeleton.getCenter()));
-		rightHandHandle = getHandleUnderHand(translate(skeleton.getRightHand(),
-				skeleton.getCenter()));
+		if (! leftHandGrab) {
+			leftHandHandle = getHandleUnderHand(translate(skeleton.getLeftHand(),
+					skeleton.getCenter()));
+		}
+		if (! rightHandGrab) {
+			rightHandHandle = getHandleUnderHand(translate(skeleton.getRightHand(),
+					skeleton.getCenter()));
+		}
 		if (leftHandGrab) {
 			if (leftHandHandle != null) {
 				skeleton.setLeftHand(translate(leftHandHandle,
@@ -119,7 +121,7 @@ public class SkeletonController {
 			} 
 			else {
 				// TODO some physics here??
-				skeleton.setCenter(new Point(oldCenter.x, oldCenter.y + 6));
+				skeleton.setCenter(new Point(oldCenter.x, oldCenter.y + Skeleton.fallingSpeed));
 			}
 		}
 		

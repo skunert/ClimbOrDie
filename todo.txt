@@ -1,0 +1,15 @@
+todo's:
+- neue grab-methode (hand nach vorne bedeutet grab) [timo]
+- fullscreen mode [daniel]
+- auto-grab (snap to handle): arm sollte nicht einfach größer/kleiner werden [stefan, timo]
+	- unsnap-radius vergrößern
+	- arm nur in der länge skalieren
+- auto-grab: bei gegrabbtem handle sollte die hand nicht auf ein anderes handle umsnappen können: [stefan, timo]
+	- evtl. schulter und armgelenke der kinect bei grab komplett ignorieren
+- schneller fallen
+- handles korrekt platzieren (upper limit hochsetzen, insgesamt weniger handles, an der oberkante handles platzieren) [daniel]
+- win condition
+
+- videodreh: mi., 29.01., EN 147
+	- kamera: sebastian
+	- stativ: stefan

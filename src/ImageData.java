@@ -10,6 +10,16 @@ import processing.core.*;
 public class ImageData {
 	
 	private static int HANDLES_NUM = 8;
+
+    private static int HANDLE_COUNT = 300;
+
+    public static int HANDLE_MIN_HEIGHT = 80;
+    public static int HANDLE_COUNT_X = 18;
+    public static int HANDLE_COUNT_Y = 12;
+    public static int BACKGROUND_WIDTH = 750;
+    public static int BACKGROUND_HEIGHT = 700;
+    public static float HANDLE_JITTER_X = 0.7f;
+    public static float HANDLE_JITTER_Y = 0.7f;
 	
 	private PApplet pApplet;
 	
@@ -44,7 +54,6 @@ public class ImageData {
 	
 	public PImage[] handles;
 	public PImage handleHighlight;
-	public int handlesMinHeight;
 	
 	public PImage headBack;
 	public Point headBackPoint1;
@@ -103,6 +112,8 @@ public class ImageData {
 		this.armUpperRightPoint2 = new Point(46, 204);
 		
 		this.background = pApplet.loadImage("resources/images/background2.png");
+        BACKGROUND_HEIGHT = this.background.height;
+        BACKGROUND_WIDTH = this.background.width;
 		
 		this.banner_lose = pApplet.loadImage("resources/images/banner_lose.png");
 		this.banner_move = pApplet.loadImage("resources/images/banner_move.png");
@@ -117,9 +128,9 @@ public class ImageData {
 		for (int i = 0; i < handles.length; i++) {
 			handles[i] = pApplet.loadImage("resources/images/handle" + (i+1) + "_50x50.png");
 		}
+
 		this.handleHighlight = pApplet.loadImage("resources/images/handle_highlight.png");
-		this.handlesMinHeight = 120;
-		
+
 		this.headBack = pApplet.loadImage("resources/images/head_back_116x200.png");
 		this.headBackPoint1 = new Point(116, 200);
 		
@@ -262,10 +273,6 @@ public class ImageData {
 
 	public PImage getHandleHighlight() {
 		return handleHighlight;
-	}
-
-	public int getHandlesMinHeight() {
-		return handlesMinHeight;
 	}
 
 	public PImage getHeadBack() {
