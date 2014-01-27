@@ -4,7 +4,7 @@ import processing.core.PApplet;
 
 public class ClimbOrDie extends PApplet {
 
-	public final static boolean DEBUG = false;
+	public final static boolean DEBUG = true;
 	public final static int WIDTH = 720;
 	public final static int HEIGHT = 700;
 
@@ -17,7 +17,7 @@ public class ClimbOrDie extends PApplet {
 	private boolean gameStarted;
 
 	public static void main(String args[]) {
-		PApplet.main(new String[] { "--present","ClimbOrDie" });
+		PApplet.main(new String[] { /*"--present", */"ClimbOrDie" });
 	}
 
 	public void setup() {

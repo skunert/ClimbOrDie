@@ -4,7 +4,7 @@ import processing.core.PApplet;
 import processing.core.PVector;
 import SimpleOpenNI.SimpleOpenNI;
 
-public class KinectController {
+public class KinectController_old {
 
 	private SimpleOpenNI context;
 	private PApplet pApplet;
@@ -17,22 +17,30 @@ public class KinectController {
 	private PVector rightShoulderPosition = new PVector();
 	private PVector leftShoulderPosition = new PVector();
 
-	private boolean grabLeftAverage[] = new boolean[3];
-	private int grabLeftAverageIndex = 0;
-	private boolean grabLeft;
-
-	private boolean grabRightAverage[] = new boolean[3];
-	private int grabRightAverageIndex = 0;
 	private boolean grabRight;
+	private boolean grabLeft;
 
 	private boolean debug = false;
 
 	private int userId = 0;
 
-	private static int MIN_HAND_Z_DEPTH_DIFF = 300;
-	private static int REFERENCE_TORSO = 1100;
+	private static int MAX_HAND_DEPTH_DOWN_DIFF = 16;
+	private static int MAX_HAND_DEPTH_UP_DIFF = 8;
+	private static int ERROR_THRESHOLD = 10;
+	private static int GRAB_THRESHOLD = 60;
+	private static int RELEASE_THRESHOLD = 100;
 
-	public KinectController(PApplet pApplet, boolean debug) {
+	private static int REFERENCE_DIST = 1070;
+
+	private boolean grabLeftAverage[] = new boolean[1];
+	private int grabLeftAverageIndex = 0;
+	private float lastLeftHandSize;
+
+	private boolean grabRightAverage[] = new boolean[1];
+	private int grabRightAverageIndex = 0;
+	private float lastRightHandSize;
+
+	public KinectController_old(PApplet pApplet, boolean debug) {
 		this.context = new SimpleOpenNI(pApplet);
 		this.pApplet = pApplet;
 		this.debug = debug;
@@ -80,25 +88,19 @@ public class KinectController {
 		if (!context.isTrackingSkeleton(userId))
 			return false;
 
-		// determine body
-		PVector realPos = new PVector();
-		context.getJointPositionSkeleton(userId, SimpleOpenNI.SKEL_TORSO,
-				realPos);
-		PVector torso = new PVector();
-		context.convertRealWorldToProjective(realPos, torso);
-
 		// determine its hands
 		// right hand
+		PVector realPos = new PVector();
 		context.getJointPositionSkeleton(userId, SimpleOpenNI.SKEL_RIGHT_HAND,
 				realPos);
 		context.convertRealWorldToProjective(realPos, rightHandPosition);
-		grabRight = updateGrab(rightHandPosition, true, torso);
+		grabRight = updateGrab(rightHandPosition, true);
 
 		// left hand
 		context.getJointPositionSkeleton(userId, SimpleOpenNI.SKEL_LEFT_HAND,
 				realPos);
 		context.convertRealWorldToProjective(realPos, leftHandPosition);
-		grabLeft = updateGrab(leftHandPosition, false, torso);
+		grabLeft = updateGrab(leftHandPosition, false);
 
 		// the rest
 
@@ -126,65 +128,122 @@ public class KinectController {
 
 	}
 
-	private boolean updateGrab(PVector handPos, boolean rightHand, PVector torso) {
+	private boolean updateGrab(PVector handPos, boolean rightHand) {
 		PVector[] depthMap = context.depthMapRealWorld();
 
-		int indexHand = Math.round(handPos.x) + Math.round(handPos.y)
+		int index = Math.round(handPos.x) + Math.round(handPos.y)
 				* context.depthWidth();
 
-		int indexTorso = Math.round(torso.x) + Math.round(torso.y)
-				* context.depthWidth();
+		// use last state
+		if (index > depthMap.length || index < 0) {
+			if (rightHand) {
+				return grabRightAverage[grabRightAverage.length - 1];
+			} else {
+				return grabLeftAverage[grabLeftAverage.length - 1];
+			}
+		}
 
-		// get average
+		double handZ = depthMap[index].z;
+
+		double distScale = REFERENCE_DIST / handZ;
+
+		// go upwards
+		int off = 0;
+		for (; off < context.depthHeight(); off++) {
+			index = Math.round(handPos.x) + (Math.round(handPos.y) - off)
+					* context.depthWidth();
+
+			if (index > 0
+					&& ((int) depthMap[index].z) - ((int) handZ) > MAX_HAND_DEPTH_UP_DIFF) {
+				break;
+			}
+		}
+		float handTopY = handPos.y - off;
+
+		// go downwards
+		for (off = 0; off < context.depthHeight(); off++) {
+			index = Math.round(handPos.x) + (Math.round(handPos.y) + off)
+					* context.depthWidth();
+
+			if (index > 0
+					&& index < depthMap.length
+					&& ((int) depthMap[index].z) - ((int) handZ) > MAX_HAND_DEPTH_DOWN_DIFF) {
+				break;
+			}
+		}
+		float handBottomY = handPos.y + off;
+
+		// show the detected hand
+		if (debug) {
+			pApplet.stroke(pApplet.color(0, 255, 0));
+			pApplet.strokeWeight(4);
+			pApplet.line(handPos.x, handTopY, handPos.x, handBottomY);
+			pApplet.strokeWeight(1);
+			pApplet.stroke(pApplet.color(0, 0, 0));
+		}
+
+		float handSize = handBottomY - handTopY;
+
 		int avg = 0;
+
+		// detect grab
 		if (rightHand) {
+			// get average
 			for (int i = 0; i < grabRightAverage.length; ++i) {
 				if (grabRightAverage[i]) {
 					avg++;
 				}
 			}
 			avg = (int) Math.round(((double) avg) / grabRightAverage.length);
+
+			if (lastRightHandSize > 0) {
+				// TOP and BOTTOM are one point! (error)
+				if (handSize < ERROR_THRESHOLD * distScale) {
+					// do not change grabAverage
+					grabRightAverageIndex--;
+					if (grabRightAverageIndex < -1)
+						grabRightAverageIndex = -1;
+				} else if (handSize < GRAB_THRESHOLD * distScale) {
+					grabRightAverage[grabRightAverageIndex] = true;
+				} else if (handSize > RELEASE_THRESHOLD * distScale) {
+					grabRightAverage[grabRightAverageIndex] = false;
+				} else {
+					grabRightAverage[grabRightAverageIndex] = (avg == 1);
+				}
+				grabRightAverageIndex++;
+				if (grabRightAverageIndex == grabRightAverage.length)
+					grabRightAverageIndex = 0;
+			}
+			lastRightHandSize = handSize;
+
 		} else {
+			// get average
 			for (int i = 0; i < grabLeftAverage.length; ++i) {
 				if (grabLeftAverage[i]) {
 					avg++;
 				}
 			}
 			avg = (int) Math.round(((double) avg) / grabLeftAverage.length);
-		}
 
-		// use last state
-		if (indexHand < depthMap.length && indexHand > 0
-				&& indexTorso < depthMap.length && indexTorso > 0) {
-
-			double handZ = depthMap[indexHand].z;
-			double torsoZ = depthMap[indexTorso].z;
-
-			double distScale = REFERENCE_TORSO / torsoZ;
-
-			if ((torsoZ - handZ) > (MIN_HAND_Z_DEPTH_DIFF * distScale)) {
-				if (rightHand) {
-					grabRightAverage[grabRightAverageIndex] = true;
-				} else {
+			if (lastLeftHandSize > 0) {
+				// TOP and BOTTOM are one point! (error)
+				if (handSize < ERROR_THRESHOLD) {
+					// do not change grabAverage
+					grabLeftAverageIndex--;
+					if (grabLeftAverageIndex < -1)
+						grabLeftAverageIndex = -1;
+				} else if (handSize < GRAB_THRESHOLD) {
 					grabLeftAverage[grabLeftAverageIndex] = true;
-				}
-			} else {
-				if (rightHand) {
-					grabRightAverage[grabRightAverageIndex] = false;
-				} else {
+				} else if (handSize > RELEASE_THRESHOLD) {
 					grabLeftAverage[grabLeftAverageIndex] = false;
+				} else {
+					grabLeftAverage[grabLeftAverageIndex] = (avg == 1);
 				}
-			}
-
-			if (rightHand) {
-				grabRightAverageIndex++;
-				if (grabRightAverageIndex == grabRightAverage.length)
-					grabRightAverageIndex = 0;
-			} else {
 				grabLeftAverageIndex++;
 				if (grabLeftAverageIndex == grabLeftAverage.length)
 					grabLeftAverageIndex = 0;
 			}
+			lastLeftHandSize = handSize;
 		}
 
 		if (debug) {

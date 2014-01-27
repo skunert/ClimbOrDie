@@ -60,7 +60,7 @@ public class SkeletonController {
 		int yOffset = currentHandAvg.y - lastHandAvg.y;
 
 		// only if both hands grab, skeleton can move upwards
-		if (leftHandHandle != null && leftHandHandle != null && yOffset > 1
+		if (leftHandHandle != null && leftHandHandle != null && yOffset > 2
 				&& yOffset < CLIMB_UP_LIMIT) {
 
 			// the center must be shifted upwards
@@ -114,12 +114,12 @@ public class SkeletonController {
 		if (skeleton.isFalling()) {
 			Point oldCenter = skeleton.getCenter();
 			if (oldCenter.y > scene.getLooseGameHeight()) {
-//				skeleton.setFalling(false); FIXME
-//				scene.setGameLost(true);
+				skeleton.setFalling(false); 
+				scene.setGameLost(true);
 			} 
 			else {
 				// TODO some physics here??
-				skeleton.setCenter(new Point(oldCenter.x, oldCenter.y + 2));
+				skeleton.setCenter(new Point(oldCenter.x, oldCenter.y + 6));
 			}
 		}
 		
@@ -127,8 +127,8 @@ public class SkeletonController {
 				.getWinGameHeight()
 				|| (skeleton.getCenter().y + skeleton.getRightHand().y) < scene
 						.getWinGameHeight()) {
-//			skeleton.setFalling(false); FIXME
-//			scene.setGameWon(true);
+			skeleton.setFalling(false); 
+			scene.setGameWon(true);
 		}
 	}
 
