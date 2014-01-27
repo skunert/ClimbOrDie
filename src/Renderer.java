@@ -242,7 +242,7 @@ public class Renderer {
 		float angle = (float) Math.PI - (float) Math.atan2(skelPoint1.x - skelPoint2.x, skelPoint1.y - skelPoint2.y);
 		parent.pushMatrix();
 		parent.translate(startPoint.x, startPoint.y);
-		parent.scale(scaleFactor);
+		parent.scale(scaleFactor, 1);
 		parent.rotate(angle);
 		parent.image(pImage, negativeImagePoint1.x, negativeImagePoint1.y);
 		parent.popMatrix();

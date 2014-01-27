@@ -7,8 +7,9 @@ public class SkeletonController {
 	private Handle rightHandHandle;
 
 	private Point lastHandAvg;
-
-	private static final int CLIMB_UP_LIMIT = 10;
+	
+	private boolean leftHandAttached = false;
+	private boolean rightHandAttached = false;
 
 	public SkeletonController(Scene scene) {
 		this.scene = scene;
@@ -61,7 +62,7 @@ public class SkeletonController {
 
 		// only if both hands grab, skeleton can move upwards
 		if (leftHandHandle != null && leftHandHandle != null && yOffset > 1
-				&& yOffset < CLIMB_UP_LIMIT) {
+				&& yOffset < Skeleton.climpUpLimit) {
 
 			// the center must be shifted upwards
 			Point oldCenter = skeleton.getCenter();
@@ -83,10 +84,14 @@ public class SkeletonController {
 			rightHandHandle.setHighlight(false);
 		}
 
-		leftHandHandle = getHandleUnderHand(translate(skeleton.getLeftHand(),
-				skeleton.getCenter()));
-		rightHandHandle = getHandleUnderHand(translate(skeleton.getRightHand(),
-				skeleton.getCenter()));
+		if (! leftHandGrab) {
+			leftHandHandle = getHandleUnderHand(translate(skeleton.getLeftHand(),
+					skeleton.getCenter()));
+		}
+		if (! rightHandGrab) {
+			rightHandHandle = getHandleUnderHand(translate(skeleton.getRightHand(),
+					skeleton.getCenter()));
+		}
 		if (leftHandGrab) {
 			if (leftHandHandle != null) {
 				skeleton.setLeftHand(translate(leftHandHandle,
@@ -114,12 +119,12 @@ public class SkeletonController {
 		if (skeleton.isFalling()) {
 			Point oldCenter = skeleton.getCenter();
 			if (oldCenter.y > scene.getLooseGameHeight()) {
-//				skeleton.setFalling(false); FIXME
-//				scene.setGameLost(true);
+				skeleton.setFalling(false);
+				scene.setGameLost(true);
 			} 
 			else {
 				// TODO some physics here??
-				skeleton.setCenter(new Point(oldCenter.x, oldCenter.y + 2));
+				skeleton.setCenter(new Point(oldCenter.x, oldCenter.y + Skeleton.fallingSpeed));
 			}
 		}
 		
@@ -127,8 +132,8 @@ public class SkeletonController {
 				.getWinGameHeight()
 				|| (skeleton.getCenter().y + skeleton.getRightHand().y) < scene
 						.getWinGameHeight()) {
-//			skeleton.setFalling(false); FIXME
-//			scene.setGameWon(true);
+			skeleton.setFalling(false);
+			scene.setGameWon(true);
 		}
 	}
 

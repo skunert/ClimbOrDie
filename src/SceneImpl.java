@@ -13,7 +13,7 @@ public class SceneImpl extends Scene {
 		super(parent);
 		this.handles = generateHandles();
 		this.winGameHeight = 200;
-		this.looseGameHeight = parent.getHeight();
+		this.looseGameHeight = parent.getHeight() - 100;
 	}
 
 	@Override
