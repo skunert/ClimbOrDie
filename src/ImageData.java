@@ -80,6 +80,8 @@ public class ImageData {
 	public Point legUpperRightPoint1;
 	public Point legUpperRightPoint2;
 	
+	public PImage noHandleHighlight;
+	
 	public PImage torso;
 	public Point torsoPoint1;
 	public Point torsoPoint2;
@@ -155,6 +157,8 @@ public class ImageData {
 		this.legUpperRight = pApplet.loadImage("resources/images/leg_upper_right_55x48_52x282.png");
 		this.legUpperRightPoint1 = new Point(55, 48);
 		this.legUpperRightPoint2 = new Point(52, 282);
+		
+		this.noHandleHighlight = pApplet.loadImage("resources/images/no_handle_highlight.png");
 		
 		this.torso = pApplet.loadImage("resources/images/torso_164x6_40x85_275x85_60x440_256x440.png");
 		this.torsoPoint1 = new Point(164, 6);
@@ -345,6 +349,10 @@ public class ImageData {
 
 	public Point getLegUpperRightPoint2() {
 		return legUpperRightPoint2;
+	}
+	
+	public PImage getNoHandleHighlight() {
+		return noHandleHighlight;
 	}
 
 	public PImage getTorso() {

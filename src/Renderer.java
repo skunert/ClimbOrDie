@@ -32,7 +32,6 @@ public class Renderer {
 			this.parent.pushMatrix();
 			this.parent.translate(h.x, h.y);
 			this.parent.scale(0.2f);
-			// TODO: Handles move with background?
             this.parent.image(imageData.getHandleByIndex(h.type), 0, 0);
             if (h.isHighlight()) {
                 this.parent.image(imageData.getHandleHighlight(), 0, 0);
@@ -233,6 +232,16 @@ public class Renderer {
 		a = translate(a, translate);
 		b = translate(b, translate);
 		this.parent.line(a.x, a.y, b.x, b.y);
+	}
+	
+	private void drawNoHandleHighlight(PImage pImage, Point handPoint) {
+		this.parent.imageMode(this.parent.CENTER);
+		this.parent.pushMatrix();
+		this.parent.translate(handPoint.x, handPoint.y);
+		this.parent.scale(0.2f);
+        this.parent.image(imageData.getNoHandleHighlight(), 0, 0);
+		this.parent.popMatrix();
+		this.parent.imageMode(this.parent.CORNER);
 	}
 
 	private void drawExtremity(PImage pImage, Point skelPoint1, Point skelPoint2, Point imagePoint1, Point imagePoint2, Point translate) {
