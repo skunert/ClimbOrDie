@@ -1,0 +1,3 @@
+- fullscreen mode
+- auto-grab (snap to handle): arm sollte nicht einfach größer/kleiner werden
+- auto-grab: bei gegrabbtem handle sollte die hand nicht auf ein anderes handle umsnappen können
