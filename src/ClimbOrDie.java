@@ -22,9 +22,8 @@ public class ClimbOrDie extends PApplet {
 	}
 
 	public void setup() {
-        Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
-        WIDTH = screenSize.width;
-        HEIGHT = screenSize.height;
+        WIDTH = displayWidth;
+        HEIGHT = displayHeight;
         ImageData.HANDLE_MIN_HEIGHT = (int)(HEIGHT*0.11);
         size(WIDTH, HEIGHT);
 		background(0);
@@ -78,6 +77,15 @@ public class ClimbOrDie extends PApplet {
 						getHeight() / 3,
 						kController.getBufferedImage().width / 2,
 						kController.getBufferedImage().height / 2);
+				popMatrix();
+				imageMode(PApplet.CORNER);
+			}
+			else {
+				imageMode(PApplet.CENTER);
+				pushMatrix();
+				image(kController.getBufferedImage(), WIDTH - 64 - 10,
+						48 +10,
+						128, 96);
 				popMatrix();
 				imageMode(PApplet.CORNER);
 			}

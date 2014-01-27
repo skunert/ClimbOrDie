@@ -83,6 +83,10 @@ public class KinectController {
 		// skeleton not recognized yet
 		if (!context.isTrackingSkeleton(userId))
 			return false;
+		
+		synchronized (this) {
+			this.bufferedImage = context.userImage();
+		}
 
 		// determine body
 		PVector realPos = new PVector();
