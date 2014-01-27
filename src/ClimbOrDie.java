@@ -1,12 +1,12 @@
-import java.awt.Rectangle;
+import java.awt.*;
 
 import processing.core.PApplet;
 
 public class ClimbOrDie extends PApplet {
 
 	public final static boolean DEBUG = false;
-	public final static int WIDTH = 720;
-	public final static int HEIGHT = 700;
+	public static int WIDTH = 720;
+	public static int HEIGHT = 700;
 
 	private static final long serialVersionUID = 1L;
 	private SkeletonController sController;
@@ -18,11 +18,15 @@ public class ClimbOrDie extends PApplet {
 	private boolean dataReady;
 
 	public static void main(String args[]) {
-		PApplet.main(new String[] { /* "--present", */"ClimbOrDie" });
+		PApplet.main(new String[] { "--present", "ClimbOrDie" });
 	}
 
 	public void setup() {
-		size(WIDTH, HEIGHT);
+        Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+        WIDTH = screenSize.width;
+        HEIGHT = screenSize.height;
+        ImageData.HANDLE_MIN_HEIGHT = (int)(HEIGHT*0.11);
+        size(WIDTH, HEIGHT);
 		background(0);
 		scene = new SceneImpl(this);
 		scene.initSkeleton();

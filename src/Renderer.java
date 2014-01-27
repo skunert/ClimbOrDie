@@ -129,7 +129,8 @@ public class Renderer {
 			}
 		}
 		parent.translate(waterPos - 20, parent.height - 150);
-		parent.scale(0.6f);
+        float scaleFactorX = 1.1f*ClimbOrDie.WIDTH/waterRightImage.width;
+		parent.scale(scaleFactorX, 0.6f);
 		parent.image(waterLeftImage, 0, 0);
 		drawCrocodile(scene, area);
 		parent.translate(-waterPos - 20, 100);
