@@ -30,7 +30,6 @@ public class ClimbOrDie extends PApplet {
 		scene = new SceneImpl(this);
 		scene.initSkeleton();
 		sController = new SkeletonController(scene);
-		kController = new KinectController(this, ClimbOrDie.DEBUG);
 		renderer = new Renderer(this);
 
 		new Thread(new Runnable() {

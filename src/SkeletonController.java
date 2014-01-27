@@ -5,9 +5,6 @@ public class SkeletonController {
 	private Skeleton skeleton;
 	private Handle leftHandHandle;
 	private Handle rightHandHandle;
-	
-	private boolean hasLeftHandle = false;
-	private boolean hasRightHandle = false;
 
 	private Point lastHandAvg;
 
@@ -61,7 +58,7 @@ public class SkeletonController {
 		int yOffset = currentHandAvg.y - lastHandAvg.y;
 
 		// only if both hands grab, skeleton can move upwards
-		if (hasLeftHandle && hasRightHandle && yOffset > 1
+		if (skeleton.isHasLeftHandle() && skeleton.isHasRightHandle() && yOffset > 1
 				&& yOffset < Skeleton.climpUpLimit) {
 
 			// the center must be shifted upwards
@@ -84,11 +81,11 @@ public class SkeletonController {
 			rightHandHandle.setHighlight(false);
 		}
 
-		if (! hasLeftHandle) {
+		if (! skeleton.isHasLeftHandle()) {
 			leftHandHandle = getHandleUnderHand(translate(skeleton.getLeftHand(),
 					skeleton.getCenter()));
 		}
-		if (! hasRightHandle) {
+		if (! skeleton.isHasRightHandle()) {
 			rightHandHandle = getHandleUnderHand(translate(skeleton.getRightHand(),
 					skeleton.getCenter()));
 		}
@@ -96,7 +93,7 @@ public class SkeletonController {
 			if (leftHandHandle != null) {
 				skeleton.setLeftHand(translate(leftHandHandle,
 						negativePoint(skeleton.getCenter())));
-				hasLeftHandle = true;
+				skeleton.setHasLeftHandle(true);
 				skeleton.setFalling(false);
 				leftHandHandle.setHighlight(true);
 				// if (ClimbOrDie.DEBUG)
@@ -107,7 +104,7 @@ public class SkeletonController {
 			if (rightHandHandle != null) {
 				skeleton.setRightHand(translate(rightHandHandle,
 						negativePoint(skeleton.getCenter())));
-				hasRightHandle = true;
+				skeleton.setHasRightHandle(true);
 				skeleton.setFalling(false);
 				rightHandHandle.setHighlight(true);
 				// if (ClimbOrDie.DEBUG)
@@ -119,10 +116,10 @@ public class SkeletonController {
 			skeleton.setFalling(true);
 		}
 		if (!leftHandGrab) {
-			hasLeftHandle = false;
+			skeleton.setHasLeftHandle(false);
 		}
 		if (!rightHandGrab) {
-			hasRightHandle = false;
+			skeleton.setHasRightHandle(false);
 		}
 		if (skeleton.isFalling()) {
 			Point oldCenter = skeleton.getCenter();

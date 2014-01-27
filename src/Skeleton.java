@@ -18,6 +18,9 @@ public class Skeleton {
     private boolean leftHandGrab;
     private boolean rightHandGrab;
     private boolean falling;
+    
+	private boolean hasLeftHandle = false;
+	private boolean hasRightHandle = false;
 
     public final static int shoulderDist = 40;
     public final static int lowerArmLength = 32;
@@ -122,5 +125,17 @@ public class Skeleton {
 	}
 	public void setFalling(boolean falling) {
 		this.falling = falling;
+	}
+	public boolean isHasLeftHandle() {
+		return hasLeftHandle;
+	}
+	public void setHasLeftHandle(boolean hasLeftHandle) {
+		this.hasLeftHandle = hasLeftHandle;
+	}
+	public boolean isHasRightHandle() {
+		return hasRightHandle;
+	}
+	public void setHasRightHandle(boolean hasRightHandle) {
+		this.hasRightHandle = hasRightHandle;
 	}
 }

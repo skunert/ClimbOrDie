@@ -56,12 +56,18 @@ public class Renderer {
 		//parent.tint(255, 126);
 
 		// Arms
-		if (s.isLeftHandGrab()) {	
+		if (s.isLeftHandGrab()) {
+			if (! s.isHasLeftHandle()) {
+				drawNoHandleHighlight(imageData.getNoHandleHighlight(), s.getLeftHand(), c);
+			}
 			drawExtremity(imageData.getArmLowerClosedLeft(), s.getLeftHand(), s.getLeftElbow(), imageData.getArmLowerLeftPoint1(), imageData.getArmLowerLeftPoint2(), c);
 		} else {
 			drawExtremity(imageData.getArmLowerOpenLeft(), s.getLeftHand(), s.getLeftElbow(), imageData.getArmLowerLeftPoint1(), imageData.getArmLowerLeftPoint2(), c);
 		}
 		if (s.isRightHandGrab()) {
+			if (! s.isHasLeftHandle()) {
+				drawNoHandleHighlight(imageData.getNoHandleHighlight(), s.getRightHand(), c);
+			}
 			drawExtremity(imageData.getArmLowerClosedRight(), s.getRightHand(), s.getRightElbow(), imageData.getArmLowerRightPoint1(), imageData.getArmLowerRightPoint2(), c);
 		} else {
 			drawExtremity(imageData.getArmLowerOpenRight(), s.getRightHand(), s.getRightElbow(), imageData.getArmLowerRightPoint1(), imageData.getArmLowerRightPoint2(), c);
@@ -235,10 +241,11 @@ public class Renderer {
 		this.parent.line(a.x, a.y, b.x, b.y);
 	}
 	
-	private void drawNoHandleHighlight(PImage pImage, Point handPoint) {
+	private void drawNoHandleHighlight(PImage pImage, Point handPoint, Point translate) {
 		this.parent.imageMode(this.parent.CENTER);
 		this.parent.pushMatrix();
-		this.parent.translate(handPoint.x, handPoint.y);
+		Point startPoint = translate(handPoint, translate);
+		this.parent.translate(startPoint.x, startPoint.y);
 		this.parent.scale(0.2f);
         this.parent.image(imageData.getNoHandleHighlight(), 0, 0);
 		this.parent.popMatrix();
