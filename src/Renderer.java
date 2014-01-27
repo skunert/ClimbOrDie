@@ -236,15 +236,16 @@ public class Renderer {
 	}
 
 	private void drawExtremity(PImage pImage, Point skelPoint1, Point skelPoint2, Point imagePoint1, Point imagePoint2, Point translate) {
-		float scaleFactor = PApplet.dist(skelPoint1.x, skelPoint1.y, skelPoint2.x, skelPoint2.y) / PApplet.dist(imagePoint1.x, imagePoint1.y, imagePoint2.x, imagePoint2.y);
-		Point negativeImagePoint1 = negativePoint(imagePoint1);
-		Point startPoint = translate(skelPoint1, translate);
+        float scaleFactorX = 0.17f;
+        float scaleFactorY = (float)(skelPoint1.distance(skelPoint2)/imagePoint1.distance(imagePoint2));
 		float angle = (float) Math.PI - (float) Math.atan2(skelPoint1.x - skelPoint2.x, skelPoint1.y - skelPoint2.y);
 		parent.pushMatrix();
-		parent.translate(startPoint.x, startPoint.y);
-		parent.scale(scaleFactor, 1);
-		parent.rotate(angle);
-		parent.image(pImage, negativeImagePoint1.x, negativeImagePoint1.y);
+        parent.translate(translate.x, translate.y);
+        parent.translate(skelPoint1.x, skelPoint1.y);
+        parent.rotate(angle);
+        parent.scale(scaleFactorX, scaleFactorY);
+        parent.translate(-imagePoint1.x, -imagePoint1.y);
+        parent.image(pImage, 0, 0);
 		parent.popMatrix();
 	}
 
