@@ -24,7 +24,7 @@ public class ClimbOrDie extends PApplet {
 	public void setup() {
         WIDTH = displayWidth;
         HEIGHT = displayHeight;
-        ImageData.HANDLE_MIN_HEIGHT = (int)(HEIGHT*0.11);
+        ImageData.HANDLE_MIN_HEIGHT = (int)(HEIGHT*0.11*ImageData.BACKGROUND_ASPECT_FACTOR);
         size(WIDTH, HEIGHT);
 		background(0);
 		scene = new SceneImpl(this);
@@ -54,7 +54,6 @@ public class ClimbOrDie extends PApplet {
 	}
 
 	public void draw() {
-
 		if (gameStarted) {
 			if (dataReady) {
 				sController.updateSkeleton(kController.getLeftElbowPosition(),

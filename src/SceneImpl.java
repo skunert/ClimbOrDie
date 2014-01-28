@@ -129,7 +129,7 @@ public class SceneImpl extends Scene {
         skeleton = new Skeleton();
 
         // dummy skeleton init
-        skeleton.setCenter(new Point(ClimbOrDie.WIDTH/2, ClimbOrDie.HEIGHT/2));
+        skeleton.setCenter(new Point(ClimbOrDie.WIDTH/2, (int)(ClimbOrDie.HEIGHT/1.8f)));
         skeleton.setHead(new Point(0, -50));
         skeleton.setHip(new Point(0, 50));
         skeleton.setLeftShoulder(new Point(-20, -30));
