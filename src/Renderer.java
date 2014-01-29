@@ -108,7 +108,9 @@ public class Renderer {
 		PImage backgroundImage = imageData.getBackground();
 		parent.pushMatrix();
 		// TODO MOVE IT!
-		parent.scale((float)parent.width / (float)backgroundImage.width, (float)parent.height / (float)backgroundImage.height);
+        float scaleX = (float)parent.width / (float)backgroundImage.width;
+        float scaleY = (float)parent.height / (float)backgroundImage.height * ImageData.BACKGROUND_ASPECT_FACTOR;
+		parent.scale(scaleX, scaleY);
 		//parent.translate(,);
 		parent.image(backgroundImage, 0, 0);
 		parent.popMatrix();
@@ -180,6 +182,7 @@ public class Renderer {
 	private void drawBanner(Scene scene, Rectangle area) {
 		this.parent.imageMode(this.parent.CENTER);
 		this.parent.pushMatrix();
+        this.parent.translate(0, parent.height/9);
 		if (! scene.isPersonFound()) {
 			this.parent.translate(parent.width / 2, parent.height / 3 * 2);
 			this.parent.scale(0.5f); // <- resize banner

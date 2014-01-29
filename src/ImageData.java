@@ -8,10 +8,12 @@ import processing.core.*;
 
 
 public class ImageData {
+
+    public static float BACKGROUND_ASPECT_FACTOR = 2.5f;
 	
 	private static int HANDLES_NUM = 8;
 
-    public static int HANDLE_MIN_HEIGHT = 90;
+    public static int HANDLE_MIN_HEIGHT;
     public static int HANDLE_COUNT_X = 21;
     public static int HANDLE_COUNT_Y = 15;
     public static float HANDLE_JITTER_X = 0.7f;
