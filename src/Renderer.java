@@ -161,9 +161,9 @@ public class Renderer {
 		}
 		if (! s.isFalling()) {
 			if (crocoDirection) {
-				crocoPos++;
+				crocoPos += 2;
 			} else {
-				crocoPos--;
+				crocoPos -= 2;
 			}
 		}
 		parent.translate(parent.width, parent.height);
