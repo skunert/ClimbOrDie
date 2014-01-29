@@ -1,7 +1,11 @@
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.io.File;
+import java.util.ArrayList;
 
 import processing.core.PApplet;
+
+import com.thoughtworks.xstream.XStream;
 
 public class ClimbOrDieWithoutKinect extends PApplet {
 
@@ -16,19 +20,26 @@ public class ClimbOrDieWithoutKinect extends PApplet {
 
 	private boolean gameStarted;
 	private boolean dataReady;
+	
+	private ArrayList<Point[]> winAnimationList;
+	private ArrayList<Point[]> loseAnimationList;
+	private int animationCounter = 0;
 
 	public static void main(String args[]) {
 		PApplet.main(new String[] { /* "--present", */"ClimbOrDieWithoutKinect" });
 	}
 
 	public void setup() {
+		XStream xStream = new XStream();
+		winAnimationList = (ArrayList<Point[]>) xStream.fromXML(new File("resources/animations/win.xml"));
+		loseAnimationList = (ArrayList<Point[]>) xStream.fromXML(new File("resources/animations/loose.xml"));
 		size(WIDTH, HEIGHT);
 		background(0);
 		scene = new SceneImpl(this);
 		scene.initSkeleton();
 		sController = new SkeletonController(scene);
 		renderer = new Renderer(this);
-
+		scene.setGameWon(true);
 	}
 
 	public void draw() {
@@ -47,6 +58,30 @@ public class ClimbOrDieWithoutKinect extends PApplet {
 
 		renderer.drawScene(scene, new Rectangle(30, 30, 101, 250));
 
+		if (scene.gameLost && ! loseAnimationList.isEmpty() && frameCount % 2 == 0) {
+			animationCounter++;
+			animationCounter = animationCounter % loseAnimationList.size();
+			Point[] points = loseAnimationList.get(animationCounter);
+			sController.updateSkeleton(points[0],
+					points[1],
+					points[2],
+					points[3],
+					points[4],
+					points[5],
+					false, false);
+		} else if (scene.gameWon && ! winAnimationList.isEmpty() && frameCount % 2 == 0) {
+			animationCounter++;
+			animationCounter = animationCounter % winAnimationList.size();
+			Point[] points = winAnimationList.get(animationCounter);
+			sController.updateSkeleton(points[0],
+					points[1],
+					points[2],
+					points[3],
+					points[4],
+					points[5],
+					false, false);
+		}
+		
 	}
 
 	// ///////////////////////////////////////////

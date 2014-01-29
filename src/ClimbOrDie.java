@@ -74,7 +74,7 @@ public class ClimbOrDie extends PApplet {
 						kController.getLeftHandPosition(),
 						kController.getRightHandPosition(),
 						kController.isGrabLeft(), kController.isGrabRight());
-			} else if (scene.gameLost && ! loseAnimationList.isEmpty() && millis() % 50 == 0) {
+			} else if (scene.gameLost && ! loseAnimationList.isEmpty() && frameCount % 2 == 0) {
 				animationCounter++;
 				animationCounter = animationCounter % loseAnimationList.size();
 				Point[] points = loseAnimationList.get(animationCounter);
@@ -84,8 +84,8 @@ public class ClimbOrDie extends PApplet {
 						points[3],
 						points[4],
 						points[5],
-						kController.isGrabLeft(), kController.isGrabRight());
-			} else if (scene.gameWon && ! winAnimationList.isEmpty() && millis() % 50 == 0) {
+						false, false);
+			} else if (scene.gameWon && ! winAnimationList.isEmpty() && frameCount % 2 == 0) {
 				animationCounter++;
 				animationCounter = animationCounter % winAnimationList.size();
 				Point[] points = winAnimationList.get(animationCounter);
@@ -95,7 +95,7 @@ public class ClimbOrDie extends PApplet {
 						points[3],
 						points[4],
 						points[5],
-						kController.isGrabLeft(), kController.isGrabRight());
+						false, false);
 			}
 		}
 
