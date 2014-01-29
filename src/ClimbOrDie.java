@@ -1,10 +1,11 @@
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.io.File;
 import java.util.ArrayList;
 
-import com.thoughtworks.xstream.XStream;
-
 import processing.core.PApplet;
+
+import com.thoughtworks.xstream.XStream;
 
 public class ClimbOrDie extends PApplet {
 
@@ -29,10 +30,11 @@ public class ClimbOrDie extends PApplet {
 		PApplet.main(new String[] { "--present", "ClimbOrDie" });
 	}
 
+	@SuppressWarnings("unchecked")
 	public void setup() {
 		XStream xStream = new XStream();
-		winAnimationList = (ArrayList<Point[]>) xStream.fromXML("resources/animations/win.xml");
-		loseAnimationList = (ArrayList<Point[]>) xStream.fromXML("resources/animations/lose.xml");
+		winAnimationList = (ArrayList<Point[]>) xStream.fromXML(new File("resources/animations/win.xml"));
+		loseAnimationList = (ArrayList<Point[]>) xStream.fromXML(new File("resources/animations/loose.xml"));
         WIDTH = displayWidth;
         HEIGHT = displayHeight;
         ImageData.HANDLE_MIN_HEIGHT = (int)(HEIGHT*0.11*ImageData.BACKGROUND_ASPECT_FACTOR);
@@ -74,8 +76,9 @@ public class ClimbOrDie extends PApplet {
 						kController.getLeftHandPosition(),
 						kController.getRightHandPosition(),
 						kController.isGrabLeft(), kController.isGrabRight());
-			} else if (scene.gameLost && ! loseAnimationList.isEmpty() && millis() % 50 == 0) {
-				animationCounter++;
+			} else if (scene.gameLost && ! loseAnimationList.isEmpty()) {
+				if (millis() % 50 == 0)
+					animationCounter++;
 				animationCounter = animationCounter % loseAnimationList.size();
 				Point[] points = loseAnimationList.get(animationCounter);
 				sController.updateSkeleton(points[0],
@@ -84,9 +87,10 @@ public class ClimbOrDie extends PApplet {
 						points[3],
 						points[4],
 						points[5],
-						kController.isGrabLeft(), kController.isGrabRight());
-			} else if (scene.gameWon && ! winAnimationList.isEmpty() && millis() % 50 == 0) {
-				animationCounter++;
+						false, false);
+			} else if (scene.gameWon && ! winAnimationList.isEmpty()) {
+				if (millis() % 50 == 0)
+					animationCounter++;
 				animationCounter = animationCounter % winAnimationList.size();
 				Point[] points = winAnimationList.get(animationCounter);
 				sController.updateSkeleton(points[0],
@@ -95,7 +99,7 @@ public class ClimbOrDie extends PApplet {
 						points[3],
 						points[4],
 						points[5],
-						kController.isGrabLeft(), kController.isGrabRight());
+						false, false);
 			}
 		}
 
@@ -134,6 +138,7 @@ public class ClimbOrDie extends PApplet {
 	boolean grab2 = true;
 
 	public void mousePressed() {
+		System.out.println(mouseY);
 		if (mouseButton == LEFT) {
 			grab = true;
 		} else if (mouseButton == RIGHT) {

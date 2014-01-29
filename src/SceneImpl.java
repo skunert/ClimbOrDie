@@ -1,4 +1,4 @@
-import java.awt.*;
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -12,7 +12,7 @@ public class SceneImpl extends Scene {
 	public SceneImpl(PApplet parent) {
 		super(parent);
 		this.handles = generateHandles();
-		this.winGameHeight = 80;
+		this.winGameHeight = 170;
 		this.looseGameHeight = ClimbOrDie.HEIGHT - 100;
 	}
 

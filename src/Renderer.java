@@ -169,7 +169,7 @@ public class Renderer {
 		parent.translate(parent.width, parent.height);
 		if (s.getCenter().y > parent.height * 2 / 3) {
 			float xRelTrans = ((s.getCenter().y - (parent.height * 2 / 3)) * (parent.width - s.getCenter().x - (imageData.getCrocodile().width * scale)) / (parent.height / 3));
-			parent.translate(-xRelTrans, 0);
+			parent.translate(-xRelTrans, -40);
 		}
 		parent.scale(scale);
 		float angle = parent.HALF_PI - (float) Math.atan2(parent.width - s.getCenter().x, parent.height - s.getCenter().y) - 0.8f;
