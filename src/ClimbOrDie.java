@@ -1,4 +1,8 @@
-import java.awt.*;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.util.ArrayList;
+
+import com.thoughtworks.xstream.XStream;
 
 import processing.core.PApplet;
 
@@ -16,12 +20,19 @@ public class ClimbOrDie extends PApplet {
 
 	private boolean gameStarted;
 	private boolean dataReady;
+	
+	private ArrayList<Point[]> winAnimationList;
+	private ArrayList<Point[]> loseAnimationList;
+	private int animationCounter = 0;
 
 	public static void main(String args[]) {
 		PApplet.main(new String[] { "--present", "ClimbOrDie" });
 	}
 
 	public void setup() {
+		XStream xStream = new XStream();
+		winAnimationList = (ArrayList<Point[]>) xStream.fromXML("resources/animations/win.xml");
+		loseAnimationList = (ArrayList<Point[]>) xStream.fromXML("resources/animations/lose.xml");
         WIDTH = displayWidth;
         HEIGHT = displayHeight;
         ImageData.HANDLE_MIN_HEIGHT = (int)(HEIGHT*0.11*ImageData.BACKGROUND_ASPECT_FACTOR);
@@ -55,13 +66,35 @@ public class ClimbOrDie extends PApplet {
 
 	public void draw() {
 		if (gameStarted) {
-			if (dataReady) {
+			if (dataReady && (! scene.gameLost && ! scene.gameWon)) {
 				sController.updateSkeleton(kController.getLeftElbowPosition(),
 						kController.getRightElbowPosition(),
 						kController.getLeftShoulderPosition(),
 						kController.getRightShoulderPosition(),
 						kController.getLeftHandPosition(),
 						kController.getRightHandPosition(),
+						kController.isGrabLeft(), kController.isGrabRight());
+			} else if (scene.gameLost && ! loseAnimationList.isEmpty() && millis() % 50 == 0) {
+				animationCounter++;
+				animationCounter = animationCounter % loseAnimationList.size();
+				Point[] points = loseAnimationList.get(animationCounter);
+				sController.updateSkeleton(points[0],
+						points[1],
+						points[2],
+						points[3],
+						points[4],
+						points[5],
+						kController.isGrabLeft(), kController.isGrabRight());
+			} else if (scene.gameWon && ! winAnimationList.isEmpty() && millis() % 50 == 0) {
+				animationCounter++;
+				animationCounter = animationCounter % winAnimationList.size();
+				Point[] points = winAnimationList.get(animationCounter);
+				sController.updateSkeleton(points[0],
+						points[1],
+						points[2],
+						points[3],
+						points[4],
+						points[5],
 						kController.isGrabLeft(), kController.isGrabRight());
 			}
 		}
