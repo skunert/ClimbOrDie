@@ -145,28 +145,35 @@ public class Renderer {
 	}
 
 	private void drawCrocodile(Scene scene, Rectangle area) {
+		float scale = 0.3f;
 		Skeleton s = scene.getSkeleton();
 		if(s == null){
 			return;
 		}
 		parent.pushMatrix();
+		parent.resetMatrix();
 		if (parent.frameCount % 36 == 0) {
 			crocoDirection = false;
 		} else if (parent.frameCount % 18 == 0) {
 			crocoDirection = true;
 		}
-		if (parent.frameCount % 2 == 0) {
+		if (! s.isFalling()) {
 			if (crocoDirection) {
 				crocoPos++;
 			} else {
 				crocoPos--;
 			}
 		}
-		parent.resetMatrix();
-		// TODO static position???
-		parent.translate(parent.width - 300 + crocoPos,  parent.height - 220 + crocoPos);
-		parent.scale(0.3f);
-		parent.image(imageData.getCrocodile(), 0, 0);
+		parent.translate(parent.width, parent.height);
+		if (s.getCenter().y > parent.height * 2 / 3) {
+			float xRelTrans = ((s.getCenter().y - (parent.height * 2 / 3)) * (parent.width - s.getCenter().x - (imageData.getCrocodile().width * scale)) / (parent.height / 3));
+			parent.translate(-xRelTrans, 0);
+		}
+		parent.scale(scale);
+		float angle = parent.HALF_PI - (float) Math.atan2(parent.width - s.getCenter().x, parent.height - s.getCenter().y) - 0.8f;
+		parent.rotate(angle);
+		parent.translate(crocoPos, crocoPos);
+		parent.image(imageData.getCrocodile(), -imageData.getCrocodile().width, -imageData.getCrocodile().height);
 		parent.popMatrix();
 	}
 	

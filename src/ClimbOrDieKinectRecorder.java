@@ -1,6 +1,14 @@
-import java.awt.*;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
 
 import processing.core.PApplet;
+
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.XStreamException;
 
 public class ClimbOrDieKinectRecorder extends PApplet {
 
@@ -18,6 +26,7 @@ public class ClimbOrDieKinectRecorder extends PApplet {
 	private boolean dataReady;
 	
 	public int RECORDING_FILENUM = 1;
+	public ArrayList<Point[]> recList = new ArrayList<Point[]>();
 
 	public static void main(String args[]) {
 		PApplet.main(new String[] { "--present", "ClimbOrDieKinectRecorder" });
@@ -45,9 +54,18 @@ public class ClimbOrDieKinectRecorder extends PApplet {
 					} catch (InterruptedException e) {
 						// do nothing
 					}
-					if (ClimbOrDieKinectRecorder.this.gameStarted)
+					if (ClimbOrDieKinectRecorder.this.gameStarted) {
 						ClimbOrDieKinectRecorder.this.dataReady = kController.update();
-					else
+						synchronized (recList) {
+							Point[] points = { kController.getLeftElbowPosition(),
+									kController.getRightElbowPosition(),
+									kController.getLeftShoulderPosition(),
+									kController.getRightShoulderPosition(),
+									kController.getLeftHandPosition(),
+									kController.getRightHandPosition() };
+							recList.add( points );	
+						}
+					} else
 						ClimbOrDieKinectRecorder.this.gameStarted = kController
 								.updateCalibration(scene);
 				}
@@ -66,10 +84,15 @@ public class ClimbOrDieKinectRecorder extends PApplet {
 						kController.getLeftHandPosition(),
 						kController.getRightHandPosition(),
 						kController.isGrabLeft(), kController.isGrabRight());
+				
 			}
 		}
 
 		renderer.drawScene(scene, new Rectangle(30, 30, 101, 250));
+		
+		textSize(32);
+		fill(0, 102, 153);
+		text("writing to file " + RECORDING_FILENUM, 20, 20);
 
 		synchronized (kController) {
 			if (!gameStarted) {
@@ -97,25 +120,25 @@ public class ClimbOrDieKinectRecorder extends PApplet {
 			kController.debug();
 	}
 
-	// ///////////////////////////////////////////
-	// TEST STUFF
-
-	boolean grab = true;
-	boolean grab2 = true;
-
+	///////////////////////////////////////////////////
+	
 	public void mousePressed() {
-		if (mouseButton == LEFT) {
-			grab = true;
-		} else if (mouseButton == RIGHT) {
-			grab2 = true;
+		XStream xStream = new XStream();
+		synchronized (recList) {
+			try {
+				writeToFile("recording" + RECORDING_FILENUM + ".xml", xStream.toXML(recList));
+				recList.clear();
+				RECORDING_FILENUM++;
+			} catch (XStreamException | IOException e) {
+			}
 		}
 	}
-
-	public void mouseReleased() {
-		if (mouseButton == LEFT) {
-			grab = false;
-		} else if (mouseButton == RIGHT) {
-			grab2 = false;
-		}
+	
+	public static void writeToFile(String filename, String content) throws IOException {
+		BufferedWriter writer;
+		writer = new BufferedWriter(new FileWriter(filename, false));
+		writer.write(content);
+		writer.flush();
+		writer.close();
 	}
 }

@@ -1,3 +1,4 @@
+import java.awt.Point;
 import java.awt.Rectangle;
 
 import processing.core.PApplet;
@@ -46,7 +47,6 @@ public class ClimbOrDieWithoutKinect extends PApplet {
 
 		renderer.drawScene(scene, new Rectangle(30, 30, 101, 250));
 
-
 	}
 
 	// ///////////////////////////////////////////
@@ -56,11 +56,7 @@ public class ClimbOrDieWithoutKinect extends PApplet {
 	boolean grab2 = true;
 
 	public void mousePressed() {
-		if (mouseButton == LEFT) {
-			grab = true;
-		} else if (mouseButton == RIGHT) {
-			grab2 = true;
-		}
+		scene.getSkeleton().setCenter(new Point(mouseX, mouseY));
 	}
 
 	public void mouseReleased() {
