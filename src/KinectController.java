@@ -35,7 +35,7 @@ public class KinectController {
 
 	private PImage bufferedImage;
 
-	public KinectController(ClimbOrDie pApplet, boolean debug) {
+	public KinectController(PApplet pApplet, boolean debug) {
 		this.context = new SimpleOpenNI(pApplet,
 				SimpleOpenNI.RUN_MODE_MULTI_THREADED);
 		this.pApplet = pApplet;
