@@ -1,13 +1,22 @@
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 import processing.core.PApplet;
+import sun.audio.AudioPlayer;
+import sun.audio.AudioStream;
 
 import com.thoughtworks.xstream.XStream;
 
@@ -26,14 +35,15 @@ public class ClimbOrDie extends PApplet {
 	private boolean gameStarted;
 	private boolean dataReady;
 
+	private boolean soundPlayed = false;
+
 	private ArrayList<Point[]> winAnimationList;
 	private ArrayList<Point[]> loseAnimationList;
 	private int animationCounter = 0;
-	
+
 	public static final String WIN_SOUND = "resources/sounds/Attribution 3.0/Ta Da-SoundBible.com-1884170640.wav";
 	public static final String LOST_SOUND = "resources/sounds/Sampling Plus 1.0/Psycho Scream-SoundBible.com-1441943673.wav";
 	public static final String HANDLE_SOUND = "resources/sounds/Attribution 3.0/Blop-Mark_DiAngelo-79054334.wav";
-	
 
 	public static void main(String args[]) {
 		PApplet.main(new String[] { "--present", "ClimbOrDie" });
@@ -42,8 +52,10 @@ public class ClimbOrDie extends PApplet {
 	@SuppressWarnings("unchecked")
 	public void setup() {
 		XStream xStream = new XStream();
-		winAnimationList = (ArrayList<Point[]>) xStream.fromXML(new File("resources/animations/win.xml"));
-		loseAnimationList = (ArrayList<Point[]>) xStream.fromXML(new File("resources/animations/loose.xml"));
+		winAnimationList = (ArrayList<Point[]>) xStream.fromXML(new File(
+				"resources/animations/win.xml"));
+		loseAnimationList = (ArrayList<Point[]>) xStream.fromXML(new File(
+				"resources/animations/loose.xml"));
 		WIDTH = displayWidth;
 		HEIGHT = displayHeight;
 		ImageData.HANDLE_MIN_HEIGHT = (int) (HEIGHT * 0.11 * ImageData.BACKGROUND_ASPECT_FACTOR);
@@ -85,33 +97,33 @@ public class ClimbOrDie extends PApplet {
 						kController.getLeftHandPosition(),
 						kController.getRightHandPosition(),
 						kController.isGrabLeft(), kController.isGrabRight());
-			} 
+			}
 		}
 
 		renderer.drawScene(scene, new Rectangle(30, 30, 101, 250));
-		
-		if (scene.gameLost && ! loseAnimationList.isEmpty() && frameCount % 2 == 0) {
+
+		if (scene.gameLost && !loseAnimationList.isEmpty()
+				&& frameCount % 2 == 0) {
 			animationCounter++;
 			animationCounter = animationCounter % loseAnimationList.size();
 			Point[] points = loseAnimationList.get(animationCounter);
-			sController.updateSkeleton(points[0],
-					points[1],
-					points[2],
-					points[3],
-					points[4],
-					points[5],
-					false, false);
-		} else if (scene.gameWon && ! winAnimationList.isEmpty() && frameCount % 2 == 0) {
+			sController.updateSkeleton(points[0], points[1], points[2],
+					points[3], points[4], points[5], false, false);
+		} else if (scene.gameWon && !winAnimationList.isEmpty()
+				&& frameCount % 2 == 0) {
 			animationCounter++;
 			animationCounter = animationCounter % winAnimationList.size();
 			Point[] points = winAnimationList.get(animationCounter);
-			sController.updateSkeleton(points[0],
-					points[1],
-					points[2],
-					points[3],
-					points[4],
-					points[5],
-					false, false);
+			sController.updateSkeleton(points[0], points[1], points[2],
+					points[3], points[4], points[5], false, false);
+		}
+
+		if (scene.gameWon && !soundPlayed) {
+			soundPlayed = true;
+			ClimbOrDie.playSound(ClimbOrDie.WIN_SOUND);
+		} else if (scene.gameLost && !soundPlayed) {
+			soundPlayed = true;
+			ClimbOrDie.playSound(ClimbOrDie.LOST_SOUND);
 		}
 
 		synchronized (kController) {
@@ -140,23 +152,41 @@ public class ClimbOrDie extends PApplet {
 
 	// UTIILS
 
-	public static synchronized void playSound(final String url) {
+	public static synchronized void playSound(final String path) {
+				
 		new Thread(new Runnable() {
-			// The wrapper thread is unnecessary, unless it blocks on the
-			// Clip finishing; see comments.
+
+			@Override
 			public void run() {
+				InputStream in = null;
 				try {
-					Clip clip = AudioSystem.getClip();
-					AudioInputStream inputStream = AudioSystem
-							.getAudioInputStream(this.getClass()
-									.getResourceAsStream(url));
-					clip.open(inputStream);
-					clip.start();
-				} catch (Exception e) {
-					System.err.println(e.getMessage());
+					in = new FileInputStream(path);
+				} catch (FileNotFoundException e) {
+					System.out.println("Media file not found");
+					e.printStackTrace();
+				}
+
+				AudioStream as = null;
+				try {
+					as = new AudioStream(in);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				AudioPlayer.player.start(as);
+				try {
+					if (path.equals(ClimbOrDie.LOST_SOUND))
+						Thread.sleep(6000);
+					else if (path.equals(ClimbOrDie.WIN_SOUND))
+						Thread.sleep(5000);
+					else if (path.equals(ClimbOrDie.HANDLE_SOUND))
+						Thread.sleep(2000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
 				}
 			}
+			
 		}).start();
+		
 	}
 
 	// ///////////////////////////////////////////

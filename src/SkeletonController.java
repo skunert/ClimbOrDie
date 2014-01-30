@@ -7,6 +7,8 @@ public class SkeletonController {
 	private Handle rightHandHandle;
 
 	private Point lastHandAvg;
+	private Handle lastLeftHandHandle;
+	private Handle lastRightHandHandle;
 
 	public SkeletonController(Scene scene) {
 		this.scene = scene;
@@ -89,6 +91,10 @@ public class SkeletonController {
 			rightHandHandle = getHandleUnderHand(translate(skeleton.getRightHand(),
 					skeleton.getCenter()));
 		}
+		
+		if(!rightHandGrab) lastRightHandHandle = null;
+		if(!leftHandGrab) lastLeftHandHandle = null;
+		
 		if (leftHandGrab) {
 			if (leftHandHandle != null) {
 				skeleton.setLeftHand(translate(leftHandHandle,
@@ -96,6 +102,10 @@ public class SkeletonController {
 				skeleton.setHasLeftHandle(true);
 				skeleton.setFalling(false);
 				leftHandHandle.setHighlight(true);
+				if(leftHandHandle != lastLeftHandHandle) {
+					lastLeftHandHandle= leftHandHandle;
+					ClimbOrDie.playSound(ClimbOrDie.HANDLE_SOUND);
+				}
 				// if (ClimbOrDie.DEBUG)
 				// System.out.println("left hand attached to handle");
 			}
@@ -107,6 +117,10 @@ public class SkeletonController {
 				skeleton.setHasRightHandle(true);
 				skeleton.setFalling(false);
 				rightHandHandle.setHighlight(true);
+				if(rightHandHandle != lastRightHandHandle) {
+					lastRightHandHandle= rightHandHandle;
+					ClimbOrDie.playSound(ClimbOrDie.HANDLE_SOUND);
+				}
 				// if (ClimbOrDie.DEBUG)
 				// System.out.println("right hand attached to handle");
 			}
@@ -125,7 +139,6 @@ public class SkeletonController {
 			Point oldCenter = skeleton.getCenter();
 			if (oldCenter.y > scene.getLooseGameHeight()) {
 				skeleton.setFalling(false); 
-				ClimbOrDie.playSound(ClimbOrDie.LOST_SOUND);
 				scene.setGameLost(true);
 			} 
 			else {
@@ -134,9 +147,10 @@ public class SkeletonController {
 			}
 		}
 		
-		if ((skeleton.getCenter().y + skeleton.getLeftHand().y) < scene
+		if ((skeleton.getCenter().y + skeleton.getHead().y) < scene
 				.getWinGameHeight()
 				|| (skeleton.getCenter().y + skeleton.getRightHand().y) < scene
+						.getWinGameHeight() || (skeleton.getCenter().y + skeleton.getLeftHand().y) < scene
 						.getWinGameHeight()) {
 			skeleton.setFalling(false); 
 			scene.setGameWon(true);

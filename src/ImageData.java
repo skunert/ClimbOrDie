@@ -14,8 +14,8 @@ public class ImageData {
 	private static int HANDLES_NUM = 8;
 
     public static int HANDLE_MIN_HEIGHT;
-    public static int HANDLE_COUNT_X = 25;
-    public static int HANDLE_COUNT_Y = 19;
+    public static int HANDLE_COUNT_X = 35;
+    public static int HANDLE_COUNT_Y = 30;
     public static float HANDLE_JITTER_X = 0.7f;
     public static float HANDLE_JITTER_Y = 0.7f;
 	
