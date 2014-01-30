@@ -85,21 +85,7 @@ public class ClimbOrDie extends PApplet {
 						kController.getLeftHandPosition(),
 						kController.getRightHandPosition(),
 						kController.isGrabLeft(), kController.isGrabRight());
-			} else if (scene.gameLost && !loseAnimationList.isEmpty()
-					&& frameCount % 2 == 0) {
-				animationCounter++;
-				animationCounter = animationCounter % loseAnimationList.size();
-				Point[] points = loseAnimationList.get(animationCounter);
-				sController.updateSkeleton(points[0], points[1], points[2],
-						points[3], points[4], points[5], false, false);
-			} else if (scene.gameWon && !winAnimationList.isEmpty()
-					&& frameCount % 2 == 0) {
-				animationCounter++;
-				animationCounter = animationCounter % winAnimationList.size();
-				Point[] points = winAnimationList.get(animationCounter);
-				sController.updateSkeleton(points[0], points[1], points[2],
-						points[3], points[4], points[5], false, false);
-			}
+			} 
 		}
 
 		renderer.drawScene(scene, new Rectangle(30, 30, 101, 250));
