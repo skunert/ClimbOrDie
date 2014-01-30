@@ -125,6 +125,7 @@ public class SkeletonController {
 			Point oldCenter = skeleton.getCenter();
 			if (oldCenter.y > scene.getLooseGameHeight()) {
 				skeleton.setFalling(false); 
+				ClimbOrDie.playSound(ClimbOrDie.LOST_SOUND);
 				scene.setGameLost(true);
 			} 
 			else {

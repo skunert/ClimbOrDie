@@ -1,5 +1,6 @@
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.io.File;
 import java.util.ArrayList;
 
 import javax.sound.sampled.AudioInputStream;
@@ -29,9 +30,9 @@ public class ClimbOrDie extends PApplet {
 	private ArrayList<Point[]> loseAnimationList;
 	private int animationCounter = 0;
 	
-	private static final String WIN_SOUND = "resources/sounds/Attribution 3.0/Ta Da-SoundBible.com-1884170640.wav";
-	private static final String LOOSE_SOUND = "resources/sounds/Sampling Plus 1.0/Psycho Scream-SoundBible.com-1441943673.wav";
-	private static final String HANDLE_SOUND = "resources/sounds/Attribution 3.0/Blop-Mark_DiAngelo-79054334.wav";
+	public static final String WIN_SOUND = "resources/sounds/Attribution 3.0/Ta Da-SoundBible.com-1884170640.wav";
+	public static final String LOST_SOUND = "resources/sounds/Sampling Plus 1.0/Psycho Scream-SoundBible.com-1441943673.wav";
+	public static final String HANDLE_SOUND = "resources/sounds/Attribution 3.0/Blop-Mark_DiAngelo-79054334.wav";
 	
 
 	public static void main(String args[]) {
@@ -41,10 +42,8 @@ public class ClimbOrDie extends PApplet {
 	@SuppressWarnings("unchecked")
 	public void setup() {
 		XStream xStream = new XStream();
-		winAnimationList = (ArrayList<Point[]>) xStream
-				.fromXML("resources/animations/win.xml");
-		loseAnimationList = (ArrayList<Point[]>) xStream
-				.fromXML("resources/animations/lose.xml");
+		winAnimationList = (ArrayList<Point[]>) xStream.fromXML(new File("resources/animations/win.xml"));
+		loseAnimationList = (ArrayList<Point[]>) xStream.fromXML(new File("resources/animations/loose.xml"));
 		WIDTH = displayWidth;
 		HEIGHT = displayHeight;
 		ImageData.HANDLE_MIN_HEIGHT = (int) (HEIGHT * 0.11 * ImageData.BACKGROUND_ASPECT_FACTOR);
@@ -104,6 +103,30 @@ public class ClimbOrDie extends PApplet {
 		}
 
 		renderer.drawScene(scene, new Rectangle(30, 30, 101, 250));
+		
+		if (scene.gameLost && ! loseAnimationList.isEmpty() && frameCount % 2 == 0) {
+			animationCounter++;
+			animationCounter = animationCounter % loseAnimationList.size();
+			Point[] points = loseAnimationList.get(animationCounter);
+			sController.updateSkeleton(points[0],
+					points[1],
+					points[2],
+					points[3],
+					points[4],
+					points[5],
+					false, false);
+		} else if (scene.gameWon && ! winAnimationList.isEmpty() && frameCount % 2 == 0) {
+			animationCounter++;
+			animationCounter = animationCounter % winAnimationList.size();
+			Point[] points = winAnimationList.get(animationCounter);
+			sController.updateSkeleton(points[0],
+					points[1],
+					points[2],
+					points[3],
+					points[4],
+					points[5],
+					false, false);
+		}
 
 		synchronized (kController) {
 			if (!gameStarted) {
