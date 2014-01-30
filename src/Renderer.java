@@ -33,7 +33,7 @@ public class Renderer {
 			this.parent.translate(h.x, h.y);
 			this.parent.scale(0.2f);
             this.parent.image(imageData.getHandleByIndex(h.type), 0, 0);
-            if (h.isHighlight()) {
+            if (h.isHighlight() && ! (scene.gameWon || scene.gameLost)) {
                 this.parent.image(imageData.getHandleHighlight(), 0, 0);
             }
 			this.parent.popMatrix();
@@ -57,7 +57,7 @@ public class Renderer {
 
 		// Arms
 		if (s.isLeftHandGrab()) {
-			if (! s.isHasLeftHandle()) {
+			if (! s.isHasLeftHandle() && ! (scene.gameWon || scene.gameLost)) {
 				drawNoHandleHighlight(imageData.getNoHandleHighlight(), s.getLeftHand(), c);
 			}
 			drawExtremity(imageData.getArmLowerClosedLeft(), s.getLeftHand(), s.getLeftElbow(), imageData.getArmLowerLeftPoint1(), imageData.getArmLowerLeftPoint2(), c);
@@ -65,7 +65,7 @@ public class Renderer {
 			drawExtremity(imageData.getArmLowerOpenLeft(), s.getLeftHand(), s.getLeftElbow(), imageData.getArmLowerLeftPoint1(), imageData.getArmLowerLeftPoint2(), c);
 		}
 		if (s.isRightHandGrab()) {
-			if (! s.isHasLeftHandle()) {
+			if (! s.isHasRightHandle() && ! (scene.gameWon || scene.gameLost)) {
 				drawNoHandleHighlight(imageData.getNoHandleHighlight(), s.getRightHand(), c);
 			}
 			drawExtremity(imageData.getArmLowerClosedRight(), s.getRightHand(), s.getRightElbow(), imageData.getArmLowerRightPoint1(), imageData.getArmLowerRightPoint2(), c);
